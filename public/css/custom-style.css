@@ -1,0 +1,136 @@
+.custom-heading{
+margin-bottom: 30px;
+}
+
+div#myTable_info {
+    margin-bottom: 60px;
+}
+
+.dataTables_wrapper .dataTables_paginate span .paginate_button.current {
+    padding: 3px 10px;
+    color: #fff !important;
+    border: 1px solid #1f1c2f !important;
+    background: #1f1c2f !important;
+    border-radius: 2px;
+   
+}
+
+
+
+.dataTables_wrapper .dataTables_paginate span .paginate_button:hover{
+
+    background: #F0864A !important;
+    border: none;
+
+   
+}
+
+.next:hover{
+    background: #F0864A !important;
+    border: none !important;
+}
+
+.previous:hover{
+    background: #F0864A !important;
+    border: none !important;
+    color: #fff !important;
+}
+
+#myTable_filter{
+    margin: 5px 0 10px 0;
+}
+
+ /* .next {
+    background-color: #1f1c2f;
+} */
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    outline: 0;
+    box-shadow: none;
+    border: 0 !important;
+    background: #1F1C2F;
+    background-image: none;
+  }
+  /* Remove IE arrow */
+  select::-ms-expand {
+    display: none;
+  }
+  /* Custom Select */
+  .select {
+    position: relative;
+    display: flex;
+    width: 12em;
+    height: 3em;
+    line-height: 3;
+    background: #1F1C2F;
+    overflow: hidden;
+    border-radius: .25em;
+  }
+  select {
+    flex: 1;
+    padding: 0 .5em;
+    color: #fff;
+    cursor: pointer;
+  }
+  /* Arrow */
+  .select::after {
+    content: '\25BC';
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0 1em;
+    background: #1F1C2F;
+    color: #fff;
+    cursor: pointer;
+    pointer-events: none;
+    -webkit-transition: .25s all ease;
+    -o-transition: .25s all ease;
+    transition: .25s all ease;
+  }
+  /* Transition */
+  .select:hover::after {
+    color: #01041b;
+  }
+
+  .custom-btn{
+    position: absolute;
+    top: 300px;
+   
+    
+      }
+
+      .custom-btn:hover{
+        cursor: pointer !important;
+      }
+
+      .custom-form{
+        display: inline-block;
+      }
+
+      .custom-button{
+        border: none;
+        background-color: #01041b;
+        color: #fff;
+        font-size: 16px;
+        border-radius: 10px;
+        padding: 7px 10px;
+      }
+
+
+.custom-button-2 {
+  border: none;
+
+  color: #fff;
+  font-size: 16px;
+  border-radius: 10px;
+  padding: 7px 10px;
+  background-color: #077bff;
+}
+
+.hover-underline:hover{
+    text-decoration: underline;
+}

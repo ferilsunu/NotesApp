@@ -1,0 +1,110 @@
+<footer class="iq-footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-6">
+                    <ul class="list-inline mb-0">
+                      App Created By <a href="https://ferilsunu.me">Feril Sunu</a> 
+                    </ul>
+                </div>
+                <div class="col-lg-6 text-right">
+               
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- Backend Bundle JavaScript -->
+    <script src="/js/backend-bundle.min.js"></script>
+    
+    <!-- Flextree Javascript-->
+    <script src="/js/flex-tree.min.js"></script>
+    <script src="/js/tree.js"></script>
+    
+    <!-- Table Treeview JavaScript -->
+    <script src="/js/table-treeview.js"></script>
+    
+    <!-- Masonary Gallery Javascript -->
+    <script src="/js/masonry.pkgd.min.js"></script>
+    <script src="/js/imagesloaded.pkgd.min.js"></script>
+    
+    <!-- Mapbox Javascript -->
+    <script src="/js/mapbox-gl.js"></script>
+    <script src="/js/mapbox.js"></script>
+    
+    <!-- Fullcalender Javascript -->
+    <script src='/css/fullcalendar/core/main.js'></script>
+    <script src='/css/fullcalendar/daygrid/main.js'></script>
+    <script src='/css/fullcalendar/timegrid/main.js'></script>
+    <script src='/css/fullcalendar/list/main.js'></script>
+    
+    <!-- SweetAlert JavaScript -->
+    <script src="/js/sweetalert.js"></script>
+    
+    <!-- Vectoe Map JavaScript -->
+    <script src="/js/vector-map-custom.js"></script>
+    
+    <!-- Chart Custom JavaScript -->
+    <script src="/js/customizer.js"></script>
+    
+    <!-- Chart Custom JavaScript -->
+    <script src="/js/chart-custom.js"></script>
+    
+    <!-- slider JavaScript -->
+    <script src="/js/slider.js"></script>
+    
+    <!-- app JavaScript -->
+    <script src="/js/app.js"></script>
+
+
+    <script src="cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready( function () {
+
+
+
+    $('#myTable').DataTable({language: {search: '',searchPlaceholder: "Search Notes"},
+    "lengthChange": false, "pageLength": 5,   "ordering": false
+},
+    );
+
+
+        $('#myNotebookTable').DataTable({language: {search: '',searchPlaceholder: "Search Notebooks"},
+    "lengthChange": false, "pageLength": 5,   "ordering": false
+},
+    );
+
+
+
+
+} );
+    </script>
+
+        <script src="https://cdn.tiny.cloud/1/qgeigwdvqbpzau6w2q9srsx96iyroxo23etsgt4o1uy2p3ve/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+
+    
+    <script>
+      tinymce.init({
+        selector: '#mytextarea',
+        plugins: [
+          'advlist autosave autolink link image lists charmap   hr anchor pagebreak',
+          'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking','codesample',
+          'table emoticons template paste help'
+        ],
+        toolbar: 'insertfile undo redo | styleselect | fonts | bold italic underline hr codesample |  strikethrough superscript subscript | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image table |  forecolor backcolor emoticons | searchreplace | restoredraft ',
+        menubar: '',
+        autosave_interval: '20s',
+        branding: false
+
+
+        
+      });
+    </script>
+
+    <script src="/js/custom-script.js"></script>
+
+
+
+  </body>
+</html>

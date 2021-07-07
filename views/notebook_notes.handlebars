@@ -1,0 +1,86 @@
+
+      
+         <div class="content-page">
+            <div class="row">
+          
+                <div class="col-lg-12">
+                    <div class="card card-block card-stretch">
+                        <div class="card-body custom-notes-space">
+                       
+                            <h3 class="custom-heading">{{notebook.name}}</h3>
+                   
+                            <div class="iq-tab-content">
+                                <div class="note-content tab-content">
+                            
+                                    
+                                       
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="table-responsive table">
+
+
+
+                                                        <!-- Table Starts Here -->
+
+
+                                                        <table class="table tbl-server-info" id="myTable">
+                                                            <thead>
+                                                                <tr class="ligth">
+                                                                    <th  scope="col">Title</th>
+                                                                    <th scope="col">Notebook</th>
+                                                             
+                                                                    <th scope="col">Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {{#each fetched_notes}}
+                                                                <tr>
+                                                                    <td>
+                                                                        <h4 class="mb-2"><a href="/SingleNote/{{_id}}" 
+                                                                        class="hover-underline"
+                                
+                                                                        >{{title}}</a></h4>
+                                                               
+                                                                    </td>
+                                                                    <td>{{notebook}}</td>
+                                                                    <td>{{GenerateDate date 'DD MMMM YYYY'}}
+
+
+
+                                                                    </td>
+
+
+                                                                    <td>
+                                                                        <div>
+                                                                            
+           <form action="/{{_id}}?_method=DELETE" method="POST" class="custom-form">
+       <button type="submit" class="badge badge-danger custom-button">
+           <i class="las la-trash-alt mr-0"></i>
+           </button>
+  </form>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                {{/each}}
+                                                   
+                                                       
+                                                            </tbody>
+                                                        </table>
+
+
+                                                            <!-- Table Ends Here -->
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        
+                                 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
