@@ -60,7 +60,7 @@ app.use(function (err, req, res, next) {
 
 
 /* Firing the Server */
-app.listen(3000,()=>{
+app.listen(process.env.PORT,()=>{
     console.log('server running on port 3000')
 })
 /* End Firing the Server */
