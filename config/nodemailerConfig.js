@@ -26,7 +26,7 @@ module.exports = {
       html: `<h1>Email Confirmation</h1>
           <h3>Hello ${name}</h3>
           <p>Thank you for Registering. Please confirm your email by clicking on the following link</p>
-          <a href=http://localhost:3000/confirm/${confirmationCode}> Click here</a>
+          <a href=http://notes-app.ferilsunu.me/confirm/${confirmationCode}> Click here</a>
           <p>The link will be expired within 10 minutes</p>
           </div>`,
     }).catch(err => console.log(err));
