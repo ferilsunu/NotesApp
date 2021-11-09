@@ -2,8 +2,6 @@
 
 ***Live Preview***: http://notes-app.ferilsunu.me/
 
-### Aim
-
 + Create NotesApp using Nodejs, Express and Mongoose.
 + Create, Read, Update, Edit, Delete Notes and Notebooks
 + Authentication/ Registration
