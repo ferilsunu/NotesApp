@@ -14,13 +14,22 @@
  <!-- Side Navigation -->
 {{#if user}}
 {{>nav}}
-{{/if}}
+            {{/if}}
 <!-- content -->
 {{{body}}}
 <!-- footer -->
+
+{{#if user}}
+
+{{>footer-panel}}
+
+{{/if}}
+<!-- content -->
+
+
+
+
 {{>footer}}
-
-
 
 
 

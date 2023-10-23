@@ -1,5 +1,12 @@
 $( document ).ready(function() {
    
+    const demoLoginData = {
+        email: 'demo@ferilsunu.com',
+        password: 'demo1234'
+    }
+    $("#email").val(demoLoginData.email)
+    $("#password").val(demoLoginData.password)
+    
     $('.edit-button').on('click',function(){
         var button_value = $(this).val()
         
@@ -23,7 +30,11 @@ $( document ).ready(function() {
 
 
 
-    
+
+
+
+
+
 
 
 
