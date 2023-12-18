@@ -61,6 +61,6 @@ app.use(function (err, req, res, next) {
 
 /* Firing the Server */
 app.listen(process.env.PORT,()=>{
-    console.log('server running on port 3000')
+    console.log('server running')
 })
 /* End Firing the Server */

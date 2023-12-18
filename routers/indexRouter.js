@@ -43,7 +43,7 @@ router.route('/SingleNote/:id').get(authenticatedChecker,getSingleNotePage)
 router.route('/editNote/:id').put(authenticatedChecker,editNote)
 router.route('/addNote')
 .get(authenticatedChecker,getAddNote)
-.post(postAddNote)
+.post(authenticatedChecker,postAddNote)
 /*--------- End of Notes Routes ---------*/
 
 /*--------- Notebooks Routes ---------*/
