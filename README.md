@@ -17,7 +17,7 @@ A simple Notes Taking Application built with Node.js, MongoDB, and Express.js.
 
 ## Project Live URL
 
-You can access the live version of this project [here](https://notes-app-8c1p.onrender.com/).
+You can access the live version of this project [here](https://notesapp-feril.azurewebsites.net/).
 
 ## Getting Started
 
