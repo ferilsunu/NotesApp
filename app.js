@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+app.disable('x-powered-by')
 const methodOverride = require('method-override')
 const path = require('path')
 const hbs = require('express-handlebars')
@@ -29,7 +30,7 @@ helpers:{
 app.set('view engine','handlebars')
 //express-session
 app.use(session({
-    secret: 'FerilCodingKing',
+    secret: process.env.SESSION_SECRET || 'FerilCodingKing',
     resave: true,
     saveUninitialized: true
 }))
@@ -60,7 +61,7 @@ app.use(function (err, req, res, next) {
 
 
 /* Firing the Server */
-app.listen(process.env.PORT,()=>{
+app.listen(process.env.PORT,'127.0.0.1',()=>{
     console.log('server running')
 })
 /* End Firing the Server */
