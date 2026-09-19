@@ -1,62 +1,59 @@
-      
-      {{#if custom_error}}
-         <div class="alert  bg-primary" role="alert">
-                           <div class="iq-alert-text">{{custom_error}}</div>
+<section class="login-content">
+    <div class="container h-100">
+        <div class="row justify-content-center align-items-center height-self-center">
+            <div class="col-lg-5 col-md-7 col-sm-10 col-12">
+                {{#if custom_error}}
+                <div class="alert alert-warning mb-3 shadow-sm" role="alert">
+                    <div class="iq-alert-text font-weight-600">{{custom_error}}</div>
+                </div>
+                {{/if}}
+
+                <div class="sign-user_card">   
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="app-brand-badge mr-3">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
                         </div>
-      {{/if}}
-      
-       <section class="login-content">
-         <div class="container h-100">
-            <div class="row justify-content-center align-items-center height-self-center">
-               <div class="col-md-5 col-sm-12 col-12 align-self-center">
-                  <div class="sign-user_card">   
-                     <div class="logo-detail">            
-                           <div class="d-flex align-items-center"><img src="/images/logo.png" class="img-fluid rounded-normal light-logo logo" alt="logo"> <h4 class="logo-title ml-3">NotesApp</h4></div>
-                     </div>      
-                     <h3 class="mb-2">Sign In</h3>
-                     <p>Login to stay connected.</p>
-                     <form action="/login" method="POST">
-                        <div class="row">
-                           <div class="col-lg-12">
-                              <div class="floating-label form-group">
-                                 <input class="floating-input form-control" type="email" placeholder=" " id="email" name="email">
-                                 <label>Email</label>
-                              </div>
-                           </div>
-                           <div class="col-lg-12">
-                              <div class="floating-label form-group">
-                                 <input class="floating-input form-control" type="password" placeholder=" " id="password" name="password">
-                                 <label>Password</label>
-                              </div>
-                           </div>
-                           <div class="col-lg-6">
-                           
-                           </div>
-                     
+                        <div>
+                            <h4 class="app-brand-title mb-0">NOTES APP</h4>
+                            <span class="app-brand-sub">FERIL SUNU</span>
+                        </div>
+                    </div>      
 
-                              {{#if error}}
-                              <div class="col-lg-12">
-                                   <center> <p style="color: red;">{{error}}</p></center>
-                           </div>
-                           {{/if}}
+                    <h3 class="mb-1 font-weight-800">Welcome Back</h3>
+                    <p class="text-muted mb-4 font-size-14">Sign in to access and organize your notes.</p>
 
-
-
-
-
-
+                    <form action="/login" method="POST">
+                        <div class="form-group mb-3">
+                            <label class="font-weight-700">Email Address</label>
+                            <input class="form-control" type="email" placeholder="name@example.com" id="email" name="email" required autocomplete="email">
                         </div>
 
-                        
+                        <div class="form-group mb-4">
+                            <label class="font-weight-700">Password</label>
+                            <input class="form-control" type="password" placeholder="••••••••" id="password" name="password" required autocomplete="current-password">
+                        </div>
 
+                        {{#if error}}
+                        <div class="alert alert-danger py-2 mb-3 font-size-13 text-center" role="alert">
+                            {{error}}
+                        </div>
+                        {{/if}}
 
-                        <button type="submit" class="btn btn-primary">Sign In</button>
-                        <p class="mt-3 mb-0">
-                           Create an Account <a href="/register" class="text-primary"><b>Sign Up</b></a>
-                        </p>
-                     </form>
-                  </div>
-               </div>
+                        <button type="submit" class="btn btn-primary btn-block py-2">Sign In</button>
+
+                        <div class="mt-4 pt-2 text-center border-top">
+                            <p class="mb-0 text-muted font-size-14">
+                                Don't have an account? <a href="/register" class="font-weight-700 text-dark">Sign Up</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
             </div>
-         </div>
-      </section>
+        </div>
+    </div>
+</section>

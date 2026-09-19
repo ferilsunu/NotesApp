@@ -1,7 +1,19 @@
-      <div class="iq-sidebar  sidebar-default ">
+      <div class="iq-sidebar sidebar-default">
           <div class="iq-sidebar-logo d-flex align-items-center justify-content-between">
-              <a href="/" class="header-logo">
-                  <img src="/images/logo.png" class="img-fluid rounded-normal light-logo" alt="logo"> <h4 class="logo-title ml-3">NotesApp</h4>
+              <a href="/" class="header-logo d-flex align-items-center">
+                  <div class="app-brand-badge">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                          <polyline points="14 2 14 8 20 8"></polyline>
+                          <line x1="16" y1="13" x2="8" y2="13"></line>
+                          <line x1="16" y1="17" x2="8" y2="17"></line>
+                          <polyline points="10 9 9 9 8 9"></polyline>
+                      </svg>
+                  </div>
+                  <div class="brand-text-wrap ml-2">
+                      <span class="app-brand-title">NOTES APP</span>
+                      <span class="app-brand-sub">FERIL SUNU</span>
+                  </div>
               </a>
               <div class="iq-menu-bt-sidebar">
                   <i class="las la-times wrapper-menu"></i>
@@ -9,90 +21,77 @@
           </div>    
           <div class="sidebar-caption dropdown">
               <a href="#" class="iq-user-toggle d-flex align-items-center justify-content-between" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <img src="/images/1.jpg" class="img-fluid rounded avatar-50 mr-3" alt="user">
-                  <div class="caption">
-                      <h6 class="mb-0 line-height">{{user_logged.name}}</h6>
+                  <div class="user-avatar-circle">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                          <circle cx="12" cy="7" r="4"></circle>
+                      </svg>
                   </div>
-                  <i class="las la-angle-down"></i>
+                  <div class="caption flex-grow-1 ml-2 text-left">
+                      <h6 class="mb-0 user-name-display">{{user_logged.name}}</h6>
+                      <span class="user-role-badge">Active User</span>
+                  </div>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
               </a>
-              <div class="dropdown-menu w-100 border-0 my-2" aria-labelledby="dropdownMenuButton">
-             
-               
-                  <hr class="my-2">
-                  <a class="dropdown-item" href="/logout">
-                      <i class="las la-sign-out-alt font-size-20 mr-1"></i>
-                      <span>Logout</span>
+              <div class="dropdown-menu w-100 border-0 my-2 shadow-sm" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item d-flex align-items-center" href="/logout">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                      <span>Sign Out</span>
                   </a>
               </div>
           </div>
 
-
-
-
           <div class="data-scrollbar" data-scroll="1">
-  
-              <div class="sidebar-btn dropdown mb-3">
-                  <a href="/addNote"  id="dropdownMenuButton01"  aria-expanded="false" class="btn btn-primary pr-5 position-relative iq-user-toggle d-flex align-items-center justify-content-between" style="height: 40px;"><span class="btn-title"><i class="ri-add-line mr-3"></i>Add New</span></a>
-
-
+              <div class="sidebar-btn mb-3">
+                  <a href="/addNote" class="btn btn-primary btn-block d-flex align-items-center justify-content-center">
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mr-2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                      <span>Add New Note</span>
+                  </a>
               </div>
-
 
               <div class="menu-container">
-                              <nav class="iq-sidebar-menu">
-                  <ul id="iq-sidebar-toggle" class="iq-menu">
-                      <li class="">
+                  <nav class="iq-sidebar-menu">
+                      <ul id="iq-sidebar-toggle" class="iq-menu">
+                          <li>
                               <a href="/" class="svg-icon">
-                                  <i>
-                                      <svg class="svg-icon" id="iq-main-1" width="20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                                      </svg>
-                                  </i>
-                                  <span>Your Notes</span>
-                              </a>
-                          <ul id="index" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
-                          </ul>
-                      </li>
-                      <li class="">
-                          <a href="/notebooks" class="collapsed svg-icon">
-                              <i>
-                                  <svg width="20" class="svg-icon" id="iq-main-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z" />
+                                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                      <polyline points="14 2 14 8 20 8"></polyline>
+                                      <line x1="16" y1="13" x2="8" y2="13"></line>
+                                      <line x1="16" y1="17" x2="8" y2="17"></line>
                                   </svg>
-                              </i>
-                              <span>Notebooks</span>
-              
-                          </a>
-                
-                      </li>
-
-                        <li class="">
-                          <a href="https://github.com/ferilsunu/NotesApp" class="collapsed svg-icon" target="_blank">
-                              <i>
-                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 30 30">
-                        <path d="M15,3C8.373,3,3,8.373,3,15c0,5.623,3.872,10.328,9.092,11.63C12.036,26.468,12,26.28,12,26.047v-2.051 c-0.487,0-1.303,0-1.508,0c-0.821,0-1.551-0.353-1.905-1.009c-0.393-0.729-0.461-1.844-1.435-2.526 c-0.289-0.227-0.069-0.486,0.264-0.451c0.615,0.174,1.125,0.596,1.605,1.222c0.478,0.627,0.703,0.769,1.596,0.769 c0.433,0,1.081-0.025,1.691-0.121c0.328-0.833,0.895-1.6,1.588-1.962c-3.996-0.411-5.903-2.399-5.903-5.098 c0-1.162,0.495-2.286,1.336-3.233C9.053,10.647,8.706,8.73,9.435,8c1.798,0,2.885,1.166,3.146,1.481C13.477,9.174,14.461,9,15.495,9 c1.036,0,2.024,0.174,2.922,0.483C18.675,9.17,19.763,8,21.565,8c0.732,0.731,0.381,2.656,0.102,3.594 c0.836,0.945,1.328,2.066,1.328,3.226c0,2.697-1.904,4.684-5.894,5.097C18.199,20.49,19,22.1,19,23.313v2.734 c0,0.104-0.023,0.179-0.035,0.268C23.641,24.676,27,20.236,27,15C27,8.373,21.627,3,15,3z"></path>
-                    </svg>
-                              </i>
-                              <span>GitHub Code</span>
-              
-                          </a>
-                
-                      </li>
-    
-               
-                  </ul>
-              </nav>
-
+                                  <span>All Notes</span>
+                              </a>
+                          </li>
+                          <li>
+                              <a href="/notebooks" class="collapsed svg-icon">
+                                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                                      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                                  </svg>
+                                  <span>Notebooks</span>
+                              </a>
+                          </li>
+                          <li>
+                              <a href="https://github.com/ferilsunu/NotesApp" target="_blank" rel="noopener" class="collapsed svg-icon">
+                                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="mr-2">
+                                      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                                  </svg>
+                                  <span>GitHub Code</span>
+                              </a>
+                          </li>
+                          <li>
+                              <a href="https://ferilsunu.com" target="_blank" rel="noopener" class="collapsed svg-icon">
+                                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                                      <circle cx="12" cy="12" r="10"></circle>
+                                      <line x1="2" y1="12" x2="22" y2="12"></line>
+                                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                                  </svg>
+                                  <span>Portfolio</span>
+                              </a>
+                          </li>
+                      </ul>
+                  </nav>
               </div>
-
-
-      
-
           </div>
-
-
-
-      
-
-
       </div>     
