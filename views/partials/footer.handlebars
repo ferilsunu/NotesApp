@@ -20,24 +20,33 @@
         }
 
         // 2. DataTables Initialization
+        const baseDtConfig = {
+            language: { 
+                search: '', 
+                searchPlaceholder: "Search within table...",
+                paginate: {
+                    previous: '&larr; Prev',
+                    next: 'Next &rarr;'
+                },
+                info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                infoEmpty: "No entries found",
+                zeroRecords: "No matching records found"
+            },
+            lengthChange: false,
+            pageLength: 8,
+            ordering: false,
+            destroy: true,
+            dom: "<'clean-table-header'f>t<'clean-table-footer'ip>"
+        };
+
         if ($('#myTable').length) {
-            $('#myTable').DataTable({
-                language: { search: '', searchPlaceholder: "Search table..." },
-                lengthChange: false,
-                pageLength: 8,
-                ordering: false,
-                destroy: true
-            });
+            $('#myTable').DataTable(baseDtConfig);
         }
 
         if ($('#myNotebookTable').length) {
-            $('#myNotebookTable').DataTable({
-                language: { search: '', searchPlaceholder: "Search notebooks..." },
-                lengthChange: false,
-                pageLength: 8,
-                ordering: false,
-                destroy: true
-            });
+            $('#myNotebookTable').DataTable($.extend({}, baseDtConfig, {
+                language: $.extend({}, baseDtConfig.language, { searchPlaceholder: "Search notebooks..." })
+            }));
         }
 
         // 3. View Switcher (Grid vs Table)

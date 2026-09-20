@@ -274,13 +274,14 @@ h1, h2, h3, h4, h5, h6, input, button, select, textarea, .btn, .form-control {
 .nav-link {
   display: flex !important;
   align-items: center !important;
-  padding: 8px 10px !important;
+  padding: 9px 12px !important;
   border-radius: var(--radius-sm) !important;
   color: var(--text-body) !important;
   font-weight: 500 !important;
   font-size: 13px !important;
   text-decoration: none !important;
   transition: all 0.15s ease !important;
+  position: relative !important;
 }
 
 .nav-link:hover {
@@ -288,19 +289,26 @@ h1, h2, h3, h4, h5, h6, input, button, select, textarea, .btn, .form-control {
   color: var(--text-main) !important;
 }
 
+/* Selected / Active Navigation Item - Modern Light Accent (Distinct from CTA) */
 .nav-item.active > .nav-link {
-  background: var(--primary) !important;
-  color: #ffffff !important;
+  background: #eff6ff !important;
+  color: #1d4ed8 !important;
+  font-weight: 600 !important;
 }
 
 .nav-item.active > .nav-link .nav-icon {
-  color: #ffffff !important;
+  color: #2563eb !important;
 }
 
 .nav-icon {
-  color: var(--text-muted);
+  color: #64748b;
   margin-right: 10px;
   flex-shrink: 0;
+  transition: color 0.15s ease;
+}
+
+.nav-link:hover .nav-icon {
+  color: var(--text-main);
 }
 
 .nav-text {
@@ -320,8 +328,8 @@ h1, h2, h3, h4, h5, h6, input, button, select, textarea, .btn, .form-control {
 }
 
 .nav-item.active .nav-badge {
-  background: rgba(255, 255, 255, 0.2);
-  color: #ffffff;
+  background: #dbeafe !important;
+  color: #1e40af !important;
 }
 
 .sub-nav-list {
@@ -807,7 +815,7 @@ h1, h2, h3, h4, h5, h6, input, button, select, textarea, .btn, .form-control {
 }
 
 /* =========================================================
-   TABLE VIEW
+   TABLE VIEW & DATATABLES WORKSPACE STYLING
    ========================================================= */
 
 .clean-table-card {
@@ -816,35 +824,172 @@ h1, h2, h3, h4, h5, h6, input, button, select, textarea, .btn, .form-control {
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-card);
+  margin-bottom: 24px;
+}
+
+.clean-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 16px 22px;
+  background: #ffffff;
+  border-bottom: 1px solid var(--border-main);
+}
+
+.clean-table-header .dataTables_filter {
+  margin: 0;
+  width: 100%;
+  max-width: 320px;
+}
+
+.clean-table-header .dataTables_filter label {
+  margin: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.clean-table-header .dataTables_filter input {
+  width: 100%;
+  height: 38px;
+  padding: 6px 14px 6px 36px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-main);
+  background: var(--bg-subtle);
+  color: var(--text-main);
+  font-size: 13px;
+  font-weight: 400;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.clean-table-header .dataTables_filter label::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15px;
+  height: 15px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'%3E%3C/line%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+
+.clean-table-header .dataTables_filter input:focus {
+  background: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.05);
 }
 
 .clean-table {
   margin: 0 !important;
   width: 100% !important;
+  border-collapse: collapse;
 }
 
 .clean-table thead th {
-  background: var(--bg-subtle) !important;
+  background: #f8fafc !important;
   color: var(--text-muted) !important;
   font-size: 11px !important;
   font-weight: 700 !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
-  padding: 12px 18px !important;
+  letter-spacing: 0.06em !important;
+  padding: 14px 22px !important;
   border-bottom: 1px solid var(--border-main) !important;
   border-top: none !important;
 }
 
 .clean-table tbody td {
-  padding: 14px 18px !important;
+  padding: 16px 22px !important;
   vertical-align: middle !important;
   border-bottom: 1px solid var(--border-subtle) !important;
   color: var(--text-body) !important;
   font-size: 13px !important;
 }
 
+.clean-table tbody tr:last-child td {
+  border-bottom: none !important;
+}
+
+.clean-table tbody tr {
+  transition: background-color 0.15s ease;
+}
+
 .clean-table tbody tr:hover {
+  background: #f8fafc !important;
+}
+
+.clean-table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 22px;
+  background: #ffffff;
+  border-top: 1px solid var(--border-main);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.clean-table-footer .dataTables_info {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-muted);
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.clean-table-footer .dataTables_paginate {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.clean-table-footer .pagination {
+  margin: 0 !important;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.clean-table-footer .page-item .page-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-body) !important;
+  background: transparent !important;
+  border: 1px solid var(--border-main) !important;
+  border-radius: var(--radius-sm) !important;
+  transition: all 0.15s ease;
+  box-shadow: none !important;
+  text-decoration: none !important;
+}
+
+.clean-table-footer .page-item .page-link:hover {
   background: var(--bg-subtle) !important;
+  border-color: var(--border-dark) !important;
+  color: var(--text-main) !important;
+}
+
+.clean-table-footer .page-item.active .page-link {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.15) !important;
+}
+
+.clean-table-footer .page-item.disabled .page-link {
+  opacity: 0.45 !important;
+  border-color: var(--border-subtle) !important;
+  background: transparent !important;
+  color: var(--text-light) !important;
+  cursor: not-allowed !important;
 }
 
 .table-note-title {
