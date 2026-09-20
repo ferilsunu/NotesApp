@@ -31,15 +31,21 @@
                         Workspace
                     </span>
                 </div>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="dropdown-chevron"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="dropdown-chevron"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </a>
-            <div class="dropdown-menu w-100 shadow-lg border-0 py-2 mt-1" aria-labelledby="userMenuButton">
-                <div class="px-3 py-2 border-bottom">
-                    <div class="font-size-13 font-weight-600 text-dark">{{user_logged.name}}</div>
-                    <div class="font-size-11 text-muted text-truncate">{{user_logged.email}}</div>
+            <div class="dropdown-menu user-dropdown-menu" aria-labelledby="userMenuButton">
+                <div class="user-dropdown-header">
+                    <div class="user-dropdown-avatar">
+                        <span>{{initials user_logged.name}}</span>
+                    </div>
+                    <div class="user-dropdown-meta">
+                        <span class="user-dropdown-name">{{user_logged.name}}</span>
+                        <span class="user-dropdown-email">{{user_logged.email}}</span>
+                    </div>
                 </div>
-                <a class="dropdown-item d-flex align-items-center py-2 text-danger" href="/logout">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item user-dropdown-item" href="/logout">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-2 flex-shrink-0"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                     <span>Sign Out</span>
                 </a>
             </div>
