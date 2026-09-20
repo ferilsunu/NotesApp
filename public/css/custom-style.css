@@ -1471,6 +1471,46 @@ body.sidebar-collapsed .app-sidebar,
   padding: 0 2px;
 }
 
+.notion-save-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.notion-save-status .icon-saved {
+  color: var(--accent-green);
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.notion-save-status .icon-saving {
+  width: 12px;
+  height: 12px;
+  border-width: 2px;
+  color: var(--text-muted);
+}
+
+.notion-save-status.status-unsaved .save-status-text {
+  color: var(--text-light);
+}
+
+.notion-save-status.status-error {
+  color: var(--accent-red);
+  background: var(--accent-red-subtle);
+  cursor: pointer;
+}
+
+.notion-save-status.status-error:hover {
+  text-decoration: underline;
+}
+
 .notion-viewport {
   width: 100%;
   min-height: calc(100vh - 52px);

@@ -187,43 +187,232 @@
             });
         });
 
-        // 7. Native Modern Rich Text Editor
+        // 7. Native Modern Rich Text Editor & Notion-like Auto-Save Engine
         const canvas = document.getElementById('richEditorCanvas');
         const hiddenInput = document.getElementById('hiddenNoteContent');
+        const titleInput = document.querySelector('input[name="title"]');
+        const notebookSelect = document.getElementById('slct');
         const editorForm = document.getElementById('noteEditorForm');
+        const autoSaveStatus = document.getElementById('autoSaveStatus');
 
-        if (canvas && hiddenInput) {
-            function syncEditorData() {
-                const htmlContent = canvas.innerHTML;
-                hiddenInput.value = htmlContent;
+        if (canvas && editorForm) {
+            let noteMode = editorForm.getAttribute('data-mode') || 'edit';
+            let currentNoteId = editorForm.getAttribute('data-note-id') || '';
+            let saveTimer = null;
+            let isSaving = false;
+            let saveQueued = false;
 
+            // Initial saved state baseline to avoid redundant DB writes
+            let lastSavedState = {
+                title: (titleInput ? titleInput.value : '').trim(),
+                note: (canvas.innerHTML || '').trim(),
+                notebook: (notebookSelect ? notebookSelect.value : '').trim()
+            };
+
+            function updateCounters() {
                 const text = (canvas.innerText || canvas.textContent || '').trim();
                 const words = text ? text.split(/\s+/).filter(Boolean).length : 0;
                 const chars = text.length;
 
                 $('#wordCountBadge').text(words + (words === 1 ? ' word' : ' words'));
                 $('#charCountBadge').text(chars + (chars === 1 ? ' char' : ' chars'));
+                if (hiddenInput) {
+                    hiddenInput.value = canvas.innerHTML;
+                }
             }
 
-            canvas.addEventListener('input', syncEditorData);
-            canvas.addEventListener('keyup', syncEditorData);
-            canvas.addEventListener('paste', function() { setTimeout(syncEditorData, 20); });
-            canvas.addEventListener('blur', syncEditorData);
+            function setSaveStatus(state, message) {
+                if (!autoSaveStatus) return;
+                const iconSaved = autoSaveStatus.querySelector('.icon-saved');
+                const iconSaving = autoSaveStatus.querySelector('.icon-saving');
+                const textEl = autoSaveStatus.querySelector('.save-status-text');
 
-            if (editorForm) {
-                editorForm.addEventListener('submit', function (e) {
-                    syncEditorData();
-                    const trimmedText = (canvas.innerText || '').trim();
-                    if (!trimmedText && !hiddenInput.value.trim()) {
-                        e.preventDefault();
-                        alert('Please enter some content for your note.');
-                        canvas.focus();
-                        return false;
+                autoSaveStatus.classList.remove('status-saving', 'status-saved', 'status-error', 'status-unsaved');
+
+                if (state === 'saving') {
+                    autoSaveStatus.classList.add('status-saving');
+                    if (iconSaved) iconSaved.classList.add('d-none');
+                    if (iconSaving) iconSaving.classList.remove('d-none');
+                    if (textEl) textEl.textContent = 'Saving...';
+                } else if (state === 'saved') {
+                    autoSaveStatus.classList.add('status-saved');
+                    if (iconSaved) iconSaved.classList.remove('d-none');
+                    if (iconSaving) iconSaving.classList.add('d-none');
+                    if (textEl) textEl.textContent = message || 'Saved';
+                } else if (state === 'unsaved') {
+                    autoSaveStatus.classList.add('status-unsaved');
+                    if (iconSaved) iconSaved.classList.add('d-none');
+                    if (iconSaving) iconSaving.classList.add('d-none');
+                    if (textEl) textEl.textContent = 'Unsaved changes';
+                } else if (state === 'error') {
+                    autoSaveStatus.classList.add('status-error');
+                    if (iconSaved) iconSaved.classList.add('d-none');
+                    if (iconSaving) iconSaving.classList.add('d-none');
+                    if (textEl) textEl.textContent = 'Failed to save (Retry)';
+                }
+            }
+
+            function isDirty() {
+                const currentTitle = (titleInput ? titleInput.value : '').trim();
+                const currentNote = (canvas.innerHTML || '').trim();
+                const currentNotebook = (notebookSelect ? notebookSelect.value : '').trim();
+
+                return currentTitle !== lastSavedState.title ||
+                       currentNote !== lastSavedState.note ||
+                       currentNotebook !== lastSavedState.notebook;
+            }
+
+            async function performAutoSave() {
+                if (!isDirty()) {
+                    setSaveStatus('saved');
+                    return;
+                }
+
+                if (isSaving) {
+                    saveQueued = true;
+                    return;
+                }
+
+                const currentTitle = (titleInput ? titleInput.value : '').trim() || 'Untitled';
+                const currentNote = canvas.innerHTML;
+                const currentNotebook = (notebookSelect ? notebookSelect.value : '').trim() || 'General';
+
+                // Don't auto-create note if empty in add mode
+                if (noteMode === 'add' && !currentNote.trim() && (!titleInput || !titleInput.value.trim())) {
+                    return;
+                }
+
+                isSaving = true;
+                setSaveStatus('saving');
+
+                try {
+                    let url = '';
+                    let method = 'POST';
+
+                    if (noteMode === 'add' && !currentNoteId) {
+                        url = '/addNote';
+                        method = 'POST';
+                    } else {
+                        url = '/editNote/' + currentNoteId;
+                        method = 'POST';
+                    }
+
+                    const response = await fetch(url, {
+                        method: method,
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({
+                            title: currentTitle,
+                            note: currentNote,
+                            notebook: currentNotebook
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data && data.success) {
+                        lastSavedState = {
+                            title: currentTitle === 'Untitled' && (!titleInput || !titleInput.value.trim()) ? '' : currentTitle,
+                            note: currentNote.trim(),
+                            notebook: currentNotebook
+                        };
+
+                        if (noteMode === 'add' && data.noteId) {
+                            currentNoteId = data.noteId;
+                            noteMode = 'edit';
+                            editorForm.setAttribute('data-mode', 'edit');
+                            editorForm.setAttribute('data-note-id', currentNoteId);
+                            editorForm.action = '/editNote/' + currentNoteId + '?_method=PUT';
+                            window.history.replaceState(null, '', '/SingleNote/' + currentNoteId);
+                        }
+
+                        setSaveStatus('saved');
+                    } else {
+                        setSaveStatus('error');
+                    }
+                } catch (err) {
+                    console.error('AutoSave Error:', err);
+                    setSaveStatus('error');
+                } finally {
+                    isSaving = false;
+                    if (saveQueued) {
+                        saveQueued = false;
+                        if (isDirty()) {
+                            performAutoSave();
+                        }
+                    }
+                }
+            }
+
+            function triggerDebouncedSave() {
+                updateCounters();
+                if (isDirty()) {
+                    setSaveStatus('unsaved');
+                    clearTimeout(saveTimer);
+                    saveTimer = setTimeout(performAutoSave, 800);
+                } else {
+                    setSaveStatus('saved');
+                }
+            }
+
+            // Bind input and formatting triggers
+            canvas.addEventListener('input', triggerDebouncedSave);
+            canvas.addEventListener('keyup', triggerDebouncedSave);
+            canvas.addEventListener('paste', function() { setTimeout(triggerDebouncedSave, 20); });
+            canvas.addEventListener('blur', function() {
+                updateCounters();
+                if (isDirty()) {
+                    clearTimeout(saveTimer);
+                    performAutoSave();
+                }
+            });
+
+            if (titleInput) {
+                titleInput.addEventListener('input', triggerDebouncedSave);
+                titleInput.addEventListener('blur', function() {
+                    if (isDirty()) {
+                        clearTimeout(saveTimer);
+                        performAutoSave();
                     }
                 });
             }
 
-            syncEditorData();
+            if (notebookSelect) {
+                notebookSelect.addEventListener('change', function() {
+                    triggerDebouncedSave();
+                    performAutoSave(); // instant save on notebook select
+                });
+            }
+
+            // Retry saving on clicking status badge if errored
+            if (autoSaveStatus) {
+                autoSaveStatus.addEventListener('click', function() {
+                    if (isDirty() || autoSaveStatus.classList.contains('status-error')) {
+                        clearTimeout(saveTimer);
+                        performAutoSave();
+                    }
+                });
+            }
+
+            // Save immediately if leaving or reloading page
+            window.addEventListener('beforeunload', function() {
+                if (isDirty() && currentNoteId) {
+                    const currentTitle = (titleInput ? titleInput.value : '').trim() || 'Untitled';
+                    const payload = JSON.stringify({
+                        title: currentTitle,
+                        note: canvas.innerHTML,
+                        notebook: (notebookSelect ? notebookSelect.value : '').trim() || 'General'
+                    });
+                    const blob = new Blob([payload], { type: 'application/json' });
+                    navigator.sendBeacon('/editNote/' + currentNoteId, blob);
+                }
+            });
+
+            updateCounters();
+            setSaveStatus('saved');
 
             // Toolbar command buttons
             $('.toolbar-btn[data-cmd]').on('click', function (e) {
@@ -231,7 +420,7 @@
                 const cmd = $(this).data('cmd');
                 document.execCommand(cmd, false, null);
                 canvas.focus();
-                syncEditorData();
+                triggerDebouncedSave();
                 updateToolbarStates();
             });
 
@@ -248,7 +437,7 @@
                     document.execCommand('formatBlock', false, '<pre>');
                 }
                 canvas.focus();
-                syncEditorData();
+                triggerDebouncedSave();
             });
 
             // Insert Link
@@ -262,7 +451,7 @@
                     }
                     document.execCommand('createLink', false, formattedUrl);
                     canvas.focus();
-                    syncEditorData();
+                    triggerDebouncedSave();
                 }
             });
 
@@ -287,7 +476,7 @@
                         selection.addRange(range);
                     }
                     canvas.focus();
-                    syncEditorData();
+                    triggerDebouncedSave();
                 }
             });
 
@@ -296,7 +485,7 @@
                 if (e.key === 'Tab') {
                     e.preventDefault();
                     document.execCommand('insertHTML', false, '&nbsp;&nbsp;&nbsp;&nbsp;');
-                    syncEditorData();
+                    triggerDebouncedSave();
                 }
             });
 

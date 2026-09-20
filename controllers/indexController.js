@@ -43,19 +43,35 @@ module.exports = {
         })
     },
     postAddNote: async (req,res)=>{
-        if (!req.body.title || !req.body.note) {
-            req.flash('error', 'Title and Note content are required')
-            return res.redirect('/addNote')
+        try {
+            const title = (req.body.title && req.body.title.trim()) ? req.body.title.trim() : 'Untitled';
+            const note = req.body.note || '';
+            const notebook = req.body.notebook || 'General';
+
+            const newNote = await new notesModel({
+                title: title,
+                note: note,
+                notebook: notebook,
+                user: req.user._id,
+                date: new Date()
+            }).save();
+
+            const isJson = req.xhr || (req.headers.accept && req.headers.accept.includes('json')) || req.is('json') || req.headers['x-requested-with'] === 'XMLHttpRequest';
+            if (isJson) {
+                return res.json({ success: true, noteId: newNote._id, message: 'Note saved' });
+            }
+
+            req.flash('success_message', 'Note created successfully');
+            res.redirect('/');
+        } catch (err) {
+            console.error('Error in postAddNote:', err);
+            const isJson = req.xhr || (req.headers.accept && req.headers.accept.includes('json')) || req.is('json') || req.headers['x-requested-with'] === 'XMLHttpRequest';
+            if (isJson) {
+                return res.status(500).json({ success: false, error: err.message });
+            }
+            req.flash('error', 'Failed to create note');
+            res.redirect('/addNote');
         }
-        await new notesModel({
-            title: req.body.title,
-            note: req.body.note,
-            notebook: req.body.notebook,
-            user: req.user._id,
-            date: new Date()
-        }).save()
-        req.flash('success_message', 'Note created successfully')
-        res.redirect('/')
     },
     getSingleNotePage: async (req,res)=>{
         const user_logged = {name: req.user.name, email: req.user.email}
@@ -76,12 +92,36 @@ module.exports = {
         })
     },
     editNote: async (req,res)=>{
-        await notesModel.findOneAndUpdate(
-            {_id: req.params.id, user: req.user._id},
-            {title: req.body.title, note: req.body.note, notebook: req.body.notebook}
-        )
-        req.flash('success_message', 'Note updated successfully')
-        res.redirect('/')
+        try {
+            const title = (req.body.title && req.body.title.trim()) ? req.body.title.trim() : 'Untitled';
+            const note = req.body.note || '';
+            const notebook = req.body.notebook || 'General';
+
+            const updated = await notesModel.findOneAndUpdate(
+                {_id: req.params.id, user: req.user._id},
+                {title: title, note: note, notebook: notebook},
+                {new: true}
+            );
+
+            const isJson = req.xhr || (req.headers.accept && req.headers.accept.includes('json')) || req.is('json') || req.headers['x-requested-with'] === 'XMLHttpRequest';
+            if (isJson) {
+                if (!updated) {
+                    return res.status(404).json({ success: false, error: 'Note not found' });
+                }
+                return res.json({ success: true, message: 'Saved', updated_at: new Date() });
+            }
+
+            req.flash('success_message', 'Note updated successfully');
+            res.redirect('/');
+        } catch (err) {
+            console.error('Error in editNote:', err);
+            const isJson = req.xhr || (req.headers.accept && req.headers.accept.includes('json')) || req.is('json') || req.headers['x-requested-with'] === 'XMLHttpRequest';
+            if (isJson) {
+                return res.status(500).json({ success: false, error: err.message });
+            }
+            req.flash('error', 'Failed to update note');
+            res.redirect('/');
+        }
     },
     deleteNotes: async (req,res)=> {
         const delete_id = req.params.id

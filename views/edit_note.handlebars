@@ -1,5 +1,5 @@
 <main class="main-workspace notion-mode">
-    <form action="/editNote/{{fetched_single_note._id}}?_method=PUT" method="POST" id="noteEditorForm">
+    <form action="/editNote/{{fetched_single_note._id}}?_method=PUT" method="POST" id="noteEditorForm" data-mode="edit" data-note-id="{{fetched_single_note._id}}">
         <!-- Minimal Notion-Style Top Bar -->
         <header class="workspace-topbar notion-topbar">
             <div class="topbar-left d-flex align-items-center">
@@ -29,21 +29,23 @@
             </div>
 
             <div class="topbar-right ml-auto d-flex align-items-center gap-2">
-                <div class="live-counter-pill d-none d-md-flex align-items-center mr-1">
+                <div class="notion-save-status" id="autoSaveStatus" title="Changes are saved automatically">
+                    <span class="save-status-icon">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="icon-saved"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <span class="spinner-border spinner-border-sm icon-saving d-none" role="status"></span>
+                    </span>
+                    <span class="save-status-text">Saved</span>
+                </div>
+                <div class="live-counter-pill d-none d-md-flex align-items-center">
                     <span id="wordCountBadge">0 words</span>
                     <span class="counter-separator">•</span>
                     <span id="charCountBadge">0 chars</span>
                 </div>
-                <button type="button" class="btn-icon-subtle active mr-1" id="btnToggleToolbar" title="Toggle Formatting Toolbar (Ctrl+Shift+F)">
+                <button type="button" class="btn-icon-subtle active" id="btnToggleToolbar" title="Toggle Formatting Toolbar (Ctrl+Shift+F)">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>
                 </button>
-                <button type="button" class="btn-icon-subtle mr-1" id="btnToggleFullWidth" title="Toggle Full Width Canvas">
+                <button type="button" class="btn-icon-subtle" id="btnToggleFullWidth" title="Toggle Full Width Canvas">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
-                </button>
-                <a href="/" class="btn btn-secondary btn-sm">Cancel</a>
-                <button type="submit" class="btn btn-primary btn-sm d-inline-flex align-items-center">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mr-1.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-                    <span>Save Changes</span>
                 </button>
             </div>
         </header>
