@@ -190,7 +190,7 @@
         // 7. Native Modern Rich Text Editor & Notion-like Auto-Save Engine
         const canvas = document.getElementById('richEditorCanvas');
         const hiddenInput = document.getElementById('hiddenNoteContent');
-        const titleInput = document.querySelector('input[name="title"]');
+        const titleInput = document.querySelector('textarea[name="title"], input[name="title"]');
         const notebookSelect = document.getElementById('slct');
         const editorForm = document.getElementById('noteEditorForm');
         const autoSaveStatus = document.getElementById('autoSaveStatus');
@@ -201,6 +201,20 @@
             let saveTimer = null;
             let isSaving = false;
             let saveQueued = false;
+
+            // Auto-resize title textarea dynamically
+            function autoResizeTitle(el) {
+                if (!el) return;
+                el.style.height = 'auto';
+                el.style.height = (el.scrollHeight || 48) + 'px';
+            }
+
+            if (titleInput) {
+                autoResizeTitle(titleInput);
+                window.addEventListener('resize', function() {
+                    autoResizeTitle(titleInput);
+                });
+            }
 
             // Initial saved state baseline to avoid redundant DB writes
             let lastSavedState = {
@@ -358,10 +372,87 @@
                 }
             }
 
+            // Clean & sanitize pasted content (e.g. from ChatGPT, Notion, Word, or Web)
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            function insertCleanHtml(html) {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                // Remove unwanted script, style, and metadata tags
+                const elementsToRemove = doc.querySelectorAll('style, script, meta, link, title, head, svg, path, iframe');
+                elementsToRemove.forEach(el => el.remove());
+
+                // Sanitize elements: strip inline styles, classes, IDs that override fonts/colors/line-height
+                const allNodes = doc.body.querySelectorAll('*');
+                allNodes.forEach(el => {
+                    const tag = el.tagName.toLowerCase();
+                    el.removeAttribute('style');
+                    el.removeAttribute('class');
+                    el.removeAttribute('id');
+                    el.removeAttribute('data-start');
+                    el.removeAttribute('data-end');
+                    el.removeAttribute('data-is-last-node');
+
+                    // If generic container span or div with no specific tag semantics, unwrap it
+                    if (tag === 'span' || tag === 'div') {
+                        const parent = el.parentNode;
+                        if (parent) {
+                            while (el.firstChild) {
+                                parent.insertBefore(el.firstChild, el);
+                            }
+                            parent.removeChild(el);
+                        }
+                    }
+                });
+
+                const cleanBody = doc.body.innerHTML;
+                if (cleanBody && cleanBody.trim()) {
+                    document.execCommand('insertHTML', false, cleanBody);
+                }
+            }
+
+            function insertCleanPlainText(text) {
+                const lines = text.split(/\r\n|\r|\n/);
+                if (lines.length <= 1) {
+                    document.execCommand('insertText', false, text);
+                } else {
+                    const html = lines.map(line => {
+                        const trimmed = line.trim();
+                        return trimmed ? '<p>' + escapeHtml(line) + '</p>' : '<p><br></p>';
+                    }).join('');
+                    document.execCommand('insertHTML', false, html);
+                }
+            }
+
+            // Paste Interception on rich canvas
+            canvas.addEventListener('paste', function (e) {
+                e.preventDefault();
+                const clipboardData = e.clipboardData || window.clipboardData;
+                if (!clipboardData) return;
+
+                const pastedHtml = clipboardData.getData('text/html');
+                const pastedText = clipboardData.getData('text/plain');
+
+                if (pastedHtml && pastedHtml.trim()) {
+                    insertCleanHtml(pastedHtml);
+                } else if (pastedText) {
+                    insertCleanPlainText(pastedText);
+                }
+
+                setTimeout(function() {
+                    updateCounters();
+                    triggerDebouncedSave();
+                }, 20);
+            });
+
             // Bind input and formatting triggers
             canvas.addEventListener('input', triggerDebouncedSave);
             canvas.addEventListener('keyup', triggerDebouncedSave);
-            canvas.addEventListener('paste', function() { setTimeout(triggerDebouncedSave, 20); });
             canvas.addEventListener('blur', function() {
                 updateCounters();
                 if (isDirty()) {
@@ -371,8 +462,20 @@
             });
 
             if (titleInput) {
-                titleInput.addEventListener('input', triggerDebouncedSave);
+                titleInput.addEventListener('input', function() {
+                    autoResizeTitle(this);
+                    triggerDebouncedSave();
+                });
+                titleInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (canvas) {
+                            canvas.focus();
+                        }
+                    }
+                });
                 titleInput.addEventListener('blur', function() {
+                    autoResizeTitle(this);
                     if (isDirty()) {
                         clearTimeout(saveTimer);
                         performAutoSave();
