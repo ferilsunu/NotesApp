@@ -1,21 +1,42 @@
-<main class="main-workspace">
+<main class="main-workspace notion-mode">
     <form action="/editNote/{{fetched_single_note._id}}?_method=PUT" method="POST" id="noteEditorForm">
-        <!-- Top Workspace App Bar -->
-        <header class="workspace-topbar">
+        <!-- Minimal Notion-Style Top Bar -->
+        <header class="workspace-topbar notion-topbar">
             <div class="topbar-left d-flex align-items-center">
-                <a href="/" class="topbar-back-link mr-2" title="Back to Notes">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                </a>
-                <h1 class="topbar-title text-truncate" style="max-width: 320px;">{{fetched_single_note.title}}</h1>
-                <span class="topbar-count-badge ml-2 font-size-11">Editing</span>
+                <button type="button" class="btn-sidebar-toggle mr-2.5" id="btnSidebarToggle" title="Toggle Sidebar (Ctrl+\)">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+                </button>
+                <div class="notion-breadcrumb d-flex align-items-center">
+                    <a href="/" class="breadcrumb-home" title="All Notes">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                    </a>
+                    <span class="breadcrumb-slash">/</span>
+                    <div class="notion-notebook-select-pill">
+                        <span class="notebook-icon mr-1">📁</span>
+                        <select name="notebook" id="slct" class="notion-select-input" required>
+                            {{#select fetched_single_note.notebook}}
+                                {{#each fetched_notebooks}}
+                                <option value="{{name}}">{{name}}</option>
+                                {{/each}}
+                            {{/select}}
+                        </select>
+                    </div>
+                    <a href="/notebooks" class="notebook-manage-pill ml-2" target="_blank" title="Manage Notebooks">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mr-1"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                        <span>Manage</span>
+                    </a>
+                </div>
             </div>
 
             <div class="topbar-right ml-auto d-flex align-items-center gap-2">
-                <div class="live-counter-pill d-none d-md-flex align-items-center mr-2">
+                <div class="live-counter-pill d-none d-md-flex align-items-center mr-1">
                     <span id="wordCountBadge">0 words</span>
                     <span class="counter-separator">•</span>
                     <span id="charCountBadge">0 chars</span>
                 </div>
+                <button type="button" class="btn-icon-subtle mr-1" id="btnToggleFullWidth" title="Toggle Full Width Canvas">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                </button>
                 <a href="/" class="btn btn-secondary btn-sm">Cancel</a>
                 <button type="submit" class="btn btn-primary btn-sm d-inline-flex align-items-center">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mr-1.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
@@ -24,138 +45,115 @@
             </div>
         </header>
 
-        <div class="workspace-body">
-            <!-- Flash Alerts -->
-            {{#if error}}
-            <div class="alert alert-custom alert-danger d-flex align-items-center mb-4" role="alert">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mr-2 flex-shrink-0"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                <div>{{error}}</div>
-                <button type="button" class="close ml-auto" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            {{/if}}
+        <!-- Notion Borderless Document Canvas -->
+        <div class="notion-viewport">
+            <div class="notion-doc-surface" id="notionDocSurface">
+                <!-- Flash Alerts -->
+                {{#if error}}
+                <div class="alert alert-custom alert-danger d-flex align-items-center mb-4" role="alert">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mr-2 flex-shrink-0"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                    <div>{{error}}</div>
+                    <button type="button" class="close ml-auto" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{/if}}
 
-            <div class="editor-surface">
-                <div class="row">
-                    <div class="col-lg-8 col-12 mb-3">
-                        <label class="clean-field-label">Note Title</label>
-                        <input type="text" class="form-control clean-title-field" name="title" value="{{fetched_single_note.title}}" placeholder="Note title..." required autocomplete="off">
-                    </div>
+                <!-- Borderless Title -->
+                <div class="notion-title-wrap">
+                    <input type="text" class="notion-title-input" name="title" value="{{fetched_single_note.title}}" placeholder="Untitled" required autofocus autocomplete="off">
+                </div>
 
-                    <div class="col-lg-4 col-12 mb-3">
-                        <div class="d-flex align-items-center justify-content-between mb-1">
-                            <label class="clean-field-label mb-0">Notebook</label>
-                            <a href="/notebooks" class="notebook-manage-pill" target="_blank" title="Manage Notebooks">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mr-1"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-                                <span>Manage</span>
-                            </a>
-                        </div>
-                        <div class="clean-select-wrap">
-                            <select name="notebook" id="slct" required>
-                                {{#select fetched_single_note.notebook}}
-                                    {{#each fetched_notebooks}}
-                                    <option value="{{name}}">{{name}}</option>
-                                    {{/each}}
-                                {{/select}}
+                <!-- Sleek Floating / Sticky Notion Toolbar -->
+                <div class="notion-rich-editor" id="customRichEditor">
+                    <div class="notion-toolbar">
+                        <div class="toolbar-group">
+                            <select class="toolbar-select" id="formatBlockSelect" title="Text Style">
+                                <option value="p">Paragraph</option>
+                                <option value="h1">Heading 1</option>
+                                <option value="h2">Heading 2</option>
+                                <option value="h3">Heading 3</option>
+                                <option value="blockquote">Quote</option>
+                                <option value="pre">Code Block</option>
                             </select>
                         </div>
-                    </div>
 
-                    <div class="col-12 mt-2">
-                        <label class="clean-field-label">Content</label>
-                        <div class="custom-rich-editor" id="customRichEditor">
-                            <!-- Editor Toolbar -->
-                            <div class="rich-toolbar">
-                                <div class="toolbar-group">
-                                    <select class="toolbar-select" id="formatBlockSelect" title="Text Style">
-                                        <option value="p">Paragraph</option>
-                                        <option value="h1">Heading 1</option>
-                                        <option value="h2">Heading 2</option>
-                                        <option value="h3">Heading 3</option>
-                                        <option value="blockquote">Quote</option>
-                                        <option value="pre">Code Block</option>
-                                    </select>
-                                </div>
+                        <div class="toolbar-divider"></div>
 
-                                <div class="toolbar-divider"></div>
+                        <div class="toolbar-group">
+                            <button type="button" class="toolbar-btn" data-cmd="bold" title="Bold (Ctrl+B)">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path></svg>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-cmd="italic" title="Italic (Ctrl+I)">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="4" x2="10" y2="4"></line><line x1="14" y1="20" x2="5" y2="20"></line><line x1="15" y1="4" x2="9" y2="20"></line></svg>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-cmd="underline" title="Underline (Ctrl+U)">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 3v7a6 6 0 0 0 6 6 6 6 0 0 0 6-6V3"></path><line x1="4" y1="21" x2="20" y2="21"></line></svg>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-cmd="strikeThrough" title="Strikethrough">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="17" y1="5" x2="9" y2="19"></line><line x1="4" y1="12" x2="20" y2="12"></line></svg>
+                            </button>
+                        </div>
 
-                                <div class="toolbar-group">
-                                    <button type="button" class="toolbar-btn" data-cmd="bold" title="Bold (Ctrl+B)">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path></svg>
-                                    </button>
-                                    <button type="button" class="toolbar-btn" data-cmd="italic" title="Italic (Ctrl+I)">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="4" x2="10" y2="4"></line><line x1="14" y1="20" x2="5" y2="20"></line><line x1="15" y1="4" x2="9" y2="20"></line></svg>
-                                    </button>
-                                    <button type="button" class="toolbar-btn" data-cmd="underline" title="Underline (Ctrl+U)">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 3v7a6 6 0 0 0 6 6 6 6 0 0 0 6-6V3"></path><line x1="4" y1="21" x2="20" y2="21"></line></svg>
-                                    </button>
-                                    <button type="button" class="toolbar-btn" data-cmd="strikeThrough" title="Strikethrough">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="17" y1="5" x2="9" y2="19"></line><line x1="4" y1="12" x2="20" y2="12"></line></svg>
-                                    </button>
-                                </div>
+                        <div class="toolbar-divider"></div>
 
-                                <div class="toolbar-divider"></div>
+                        <div class="toolbar-group">
+                            <button type="button" class="toolbar-btn" data-cmd="justifyLeft" title="Align Left">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="17" y1="10" x2="3" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="17" y1="18" x2="3" y2="18"></line></svg>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-cmd="justifyCenter" title="Align Center">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="10" x2="6" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="18" y1="18" x2="6" y2="18"></line></svg>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-cmd="justifyRight" title="Align Right">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="21" y1="10" x2="7" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="21" y1="18" x2="7" y2="18"></line></svg>
+                            </button>
+                        </div>
 
-                                <div class="toolbar-group">
-                                    <button type="button" class="toolbar-btn" data-cmd="justifyLeft" title="Align Left">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="17" y1="10" x2="3" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="17" y1="18" x2="3" y2="18"></line></svg>
-                                    </button>
-                                    <button type="button" class="toolbar-btn" data-cmd="justifyCenter" title="Align Center">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="10" x2="6" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="18" y1="18" x2="6" y2="18"></line></svg>
-                                    </button>
-                                    <button type="button" class="toolbar-btn" data-cmd="justifyRight" title="Align Right">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="21" y1="10" x2="7" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="21" y1="18" x2="7" y2="18"></line></svg>
-                                    </button>
-                                </div>
+                        <div class="toolbar-divider"></div>
 
-                                <div class="toolbar-divider"></div>
+                        <div class="toolbar-group">
+                            <button type="button" class="toolbar-btn" data-cmd="insertUnorderedList" title="Bulleted List">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-cmd="insertOrderedList" title="Numbered List">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="10" y1="6" x2="21" y2="6"></line><line x1="10" y1="12" x2="21" y2="12"></line><line x1="10" y1="18" x2="21" y2="18"></line><path d="M4 6h1v4"></path><path d="M4 10h2"></path><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"></path></svg>
+                            </button>
+                        </div>
 
-                                <div class="toolbar-group">
-                                    <button type="button" class="toolbar-btn" data-cmd="insertUnorderedList" title="Bulleted List">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
-                                    </button>
-                                    <button type="button" class="toolbar-btn" data-cmd="insertOrderedList" title="Numbered List">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="10" y1="6" x2="21" y2="6"></line><line x1="10" y1="12" x2="21" y2="12"></line><line x1="10" y1="18" x2="21" y2="18"></line><path d="M4 6h1v4"></path><path d="M4 10h2"></path><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"></path></svg>
-                                    </button>
-                                </div>
+                        <div class="toolbar-divider"></div>
 
-                                <div class="toolbar-divider"></div>
+                        <div class="toolbar-group">
+                            <button type="button" class="toolbar-btn" id="btnInsertLink" title="Insert Link">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                            </button>
+                            <button type="button" class="toolbar-btn" id="btnInsertCode" title="Inline Code">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-cmd="insertHorizontalRule" title="Divider">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-cmd="removeFormat" title="Clear Formatting">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                            </button>
+                        </div>
 
-                                <div class="toolbar-group">
-                                    <button type="button" class="toolbar-btn" id="btnInsertLink" title="Insert Link">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-                                    </button>
-                                    <button type="button" class="toolbar-btn" id="btnInsertCode" title="Inline Code">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
-                                    </button>
-                                    <button type="button" class="toolbar-btn" data-cmd="insertHorizontalRule" title="Horizontal Divider">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                                    </button>
-                                    <button type="button" class="toolbar-btn" data-cmd="removeFormat" title="Clear Formatting">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                    </button>
-                                </div>
+                        <div class="toolbar-divider ml-auto"></div>
 
-                                <div class="toolbar-divider ml-auto"></div>
-
-                                <div class="toolbar-group">
-                                    <button type="button" class="toolbar-btn" data-cmd="undo" title="Undo (Ctrl+Z)">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 7v6h6"></path><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"></path></svg>
-                                    </button>
-                                    <button type="button" class="toolbar-btn" data-cmd="redo" title="Redo (Ctrl+Y)">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 7v6h-6"></path><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"></path></svg>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Rich Text Editor Canvas with existing note HTML -->
-                            <div class="rich-canvas" id="richEditorCanvas" contenteditable="true" spellcheck="true" data-placeholder="Start typing your note, thoughts, ideas, or lists...">{{{fetched_single_note.note}}}</div>
-                            
-                            <!-- Hidden Textarea for Form PUT submission -->
-                            <textarea name="note" id="hiddenNoteContent" class="d-none" required>{{{fetched_single_note.note}}}</textarea>
+                        <div class="toolbar-group">
+                            <button type="button" class="toolbar-btn" data-cmd="undo" title="Undo (Ctrl+Z)">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 7v6h6"></path><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"></path></svg>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-cmd="redo" title="Redo (Ctrl+Y)">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 7v6h-6"></path><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"></path></svg>
+                            </button>
                         </div>
                     </div>
+
+                    <!-- Notion Borderless Canvas -->
+                    <div class="notion-canvas" id="richEditorCanvas" contenteditable="true" spellcheck="true" data-placeholder="Press '/' for commands or start typing your note...">{{{fetched_single_note.note}}}</div>
+                    
+                    <!-- Hidden Textarea for Form PUT submission -->
+                    <textarea name="note" id="hiddenNoteContent" class="d-none" required>{{{fetched_single_note.note}}}</textarea>
                 </div>
             </div>
         </div>

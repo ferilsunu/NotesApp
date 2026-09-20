@@ -105,6 +105,13 @@ h1, h2, h3, h4, h5, h6, input, button, select, textarea, .btn, .form-control {
   padding: 20px 16px !important;
   z-index: 100 !important;
   overflow-y: auto !important;
+  transition: margin-left 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Sidebar Collapsed State (Full Screen / Focus Mode) */
+body.sidebar-collapsed .app-sidebar,
+.app-layout.sidebar-collapsed .app-sidebar {
+  margin-left: -260px !important;
 }
 
 /* Hide legacy sidebar */
@@ -117,13 +124,93 @@ h1, h2, h3, h4, h5, h6, input, button, select, textarea, .btn, .form-control {
   flex-direction: column;
 }
 
+.sidebar-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 4px 14px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 16px;
+}
+
 .app-brand {
   display: flex;
   align-items: center;
   text-decoration: none !important;
-  padding: 4px 8px 16px;
-  border-bottom: 1px solid var(--border-subtle);
-  margin-bottom: 16px;
+  padding: 0;
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.btn-sidebar-collapse {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+
+.btn-sidebar-collapse:hover {
+  background: var(--bg-subtle);
+  color: var(--text-main);
+  border-color: var(--border-main);
+}
+
+.btn-sidebar-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-main);
+  background: #ffffff;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.btn-sidebar-toggle:hover {
+  background: var(--bg-subtle);
+  color: var(--text-main);
+  border-color: var(--border-dark);
+}
+
+.btn-icon-subtle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-main);
+  background: #ffffff;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+
+.btn-icon-subtle:hover {
+  background: var(--bg-subtle);
+  color: var(--text-main);
+  border-color: var(--border-dark);
+}
+
+.btn-icon-subtle.active {
+  background: #eff6ff;
+  color: #2563eb;
+  border-color: #93c5fd;
 }
 
 .brand-icon {
@@ -1293,6 +1380,265 @@ h1, h2, h3, h4, h5, h6, input, button, select, textarea, .btn, .form-control {
   height: 1px;
   background: var(--border-main);
   margin: 24px 0;
+}
+
+/* =========================================================
+   NOTION-LIKE BORDERLESS DOCUMENT CANVAS & FOCUS MODE
+   ========================================================= */
+
+.notion-mode {
+  background: #ffffff !important;
+}
+
+.notion-topbar {
+  height: 52px !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  backdrop-filter: blur(8px) !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+  padding: 0 28px !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 50 !important;
+}
+
+.notion-breadcrumb {
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.breadcrumb-home {
+  color: var(--text-muted) !important;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none !important;
+  transition: color 0.15s ease;
+}
+
+.breadcrumb-home:hover {
+  color: var(--text-main) !important;
+}
+
+.breadcrumb-slash {
+  color: var(--text-light);
+  font-size: 13px;
+  user-select: none;
+}
+
+.notion-notebook-select-pill {
+  display: inline-flex;
+  align-items: center;
+  background: var(--bg-subtle);
+  border-radius: 9999px;
+  padding: 3px 10px 3px 8px;
+  border: 1px solid var(--border-main);
+  transition: all 0.15s ease;
+}
+
+.notion-notebook-select-pill:hover {
+  background: #ffffff;
+  border-color: var(--border-dark);
+}
+
+.notebook-icon {
+  font-size: 12px;
+}
+
+.notion-select-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  padding: 0 2px;
+}
+
+.notion-viewport {
+  width: 100%;
+  min-height: calc(100vh - 52px);
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+
+.notion-doc-surface {
+  max-width: 860px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 44px 32px 140px;
+  transition: max-width 0.22s cubic-bezier(0.16, 1, 0.3, 1), padding 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.notion-doc-surface.notion-full-width {
+  max-width: 100% !important;
+  padding: 36px 64px 140px !important;
+}
+
+.notion-title-wrap {
+  margin-bottom: 24px;
+}
+
+.notion-title-input {
+  width: 100%;
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  font-size: 38px !important;
+  font-weight: 700 !important;
+  color: var(--text-main) !important;
+  letter-spacing: -0.03em !important;
+  line-height: 1.25 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+.notion-title-input::placeholder {
+  color: #cbd5e1 !important;
+  font-weight: 700 !important;
+}
+
+.notion-rich-editor {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.notion-toolbar {
+  position: sticky;
+  top: 64px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 3px;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-main);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+  margin-bottom: 24px;
+  user-select: none;
+}
+
+.notion-canvas {
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  font-size: 16px !important;
+  line-height: 1.85 !important;
+  color: #1e293b !important;
+  padding: 0 !important;
+  min-height: 520px;
+  font-family: var(--font-main);
+  word-break: break-word;
+}
+
+.notion-canvas:empty::before {
+  content: attr(data-placeholder);
+  color: #94a3b8;
+  pointer-events: none;
+  display: block;
+  font-weight: 400;
+}
+
+.notion-canvas h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 32px 0 12px;
+  color: #0f172a;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.notion-canvas h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 24px 0 10px;
+  color: #0f172a;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+}
+
+.notion-canvas h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 18px 0 8px;
+  color: #0f172a;
+  line-height: 1.4;
+}
+
+.notion-canvas p {
+  margin: 0 0 16px;
+}
+
+.notion-canvas blockquote {
+  border-left: 3px solid #2563eb;
+  background: #f8fafc;
+  color: #334155;
+  font-style: italic;
+  padding: 12px 20px;
+  border-radius: 0 8px 8px 0;
+  margin: 20px 0;
+}
+
+.notion-canvas pre {
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 18px 20px;
+  border-radius: 10px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  overflow-x: auto;
+  margin: 20px 0;
+  line-height: 1.6;
+}
+
+.notion-canvas code {
+  background: #f1f5f9;
+  color: #e11d48;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+
+.notion-canvas pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  font-size: 14px;
+}
+
+.notion-canvas a {
+  color: #2563eb;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.notion-canvas ul, .notion-canvas ol {
+  padding-left: 26px;
+  margin: 12px 0 16px;
+}
+
+.notion-canvas li {
+  margin-bottom: 6px;
+}
+
+.notion-canvas hr {
+  border: 0;
+  height: 1px;
+  background: var(--border-main);
+  margin: 28px 0;
 }
 
 /* =========================================================

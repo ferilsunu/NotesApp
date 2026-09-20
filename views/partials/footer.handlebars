@@ -338,6 +338,74 @@
                 }
             });
         }
+
+        // 9. Sidebar Focus / Fullscreen Mode Toggle (with LocalStorage persistence)
+        function setSidebarState(isCollapsed) {
+            if (isCollapsed) {
+                $('body').addClass('sidebar-collapsed');
+                $('.app-layout').addClass('sidebar-collapsed');
+                $('#btnSidebarToggle').addClass('active');
+                localStorage.setItem('notesapp_sidebar_collapsed', 'true');
+            } else {
+                $('body').removeClass('sidebar-collapsed');
+                $('.app-layout').removeClass('sidebar-collapsed');
+                $('#btnSidebarToggle').removeClass('active');
+                localStorage.setItem('notesapp_sidebar_collapsed', 'false');
+            }
+        }
+
+        function toggleSidebar() {
+            const isCurrentlyCollapsed = $('body').hasClass('sidebar-collapsed');
+            setSidebarState(!isCurrentlyCollapsed);
+        }
+
+        // Initialize saved sidebar preference
+        const savedSidebarState = localStorage.getItem('notesapp_sidebar_collapsed');
+        if (savedSidebarState === 'true') {
+            setSidebarState(true);
+        }
+
+        $(document).on('click', '#btnSidebarCollapse, #btnSidebarToggle', function(e) {
+            e.preventDefault();
+            toggleSidebar();
+        });
+
+        // Keyboard Shortcut: Ctrl+\ or Cmd+\ to toggle sidebar
+        $(document).on('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === '\\') {
+                e.preventDefault();
+                toggleSidebar();
+            }
+        });
+
+        // 10. Notion Full-Width Canvas Mode Toggle (with LocalStorage persistence)
+        const docSurface = $('#notionDocSurface');
+        const btnFullWidth = $('#btnToggleFullWidth');
+
+        function setFullWidthState(isFullWidth) {
+            if (isFullWidth) {
+                docSurface.addClass('notion-full-width');
+                btnFullWidth.addClass('active');
+                localStorage.setItem('notesapp_full_width', 'true');
+            } else {
+                docSurface.removeClass('notion-full-width');
+                btnFullWidth.removeClass('active');
+                localStorage.setItem('notesapp_full_width', 'false');
+            }
+        }
+
+        if (docSurface.length && btnFullWidth.length) {
+            const savedFullWidthState = localStorage.getItem('notesapp_full_width');
+            if (savedFullWidthState === 'true') {
+                setFullWidthState(true);
+            }
+
+            btnFullWidth.on('click', function(e) {
+                e.preventDefault();
+                const isCurrentlyFull = docSurface.hasClass('notion-full-width');
+                setFullWidthState(!isCurrentlyFull);
+            });
+        }
     });
     </script>
     <script src="/js/custom-script.js"></script>
