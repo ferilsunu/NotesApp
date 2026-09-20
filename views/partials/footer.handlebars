@@ -148,17 +148,53 @@
                 searchQuery = '';
                 clearBtn.addClass('d-none');
                 activeNotebookFilter = 'all';
-                $('.filter-chip').removeClass('active');
-                $('.filter-chip[data-notebook="all"]').addClass('active');
+                $('.filter-chip, .filter-chip-pill').removeClass('active');
+                $('.filter-chip[data-notebook="all"], .filter-chip-pill[data-notebook="all"]').addClass('active');
+                $('#activeFilterLabel').text('All Notes');
                 applyFilter();
             });
         }
 
-        $('.filter-chip').on('click', function() {
-            $('.filter-chip').removeClass('active');
-            $(this).addClass('active');
-            activeNotebookFilter = $(this).data('notebook');
+        // Handle Notebook Filter Selection in Notes View
+        $(document).on('click', '.filter-chip, .filter-chip-pill', function() {
+            const selectedNotebook = $(this).data('notebook');
+            if (!selectedNotebook) return;
+
+            activeNotebookFilter = selectedNotebook;
+
+            // Sync active state on both dropdown items and pill buttons
+            $('.filter-chip, .filter-chip-pill').removeClass('active');
+            $('.filter-chip[data-notebook="' + selectedNotebook + '"], .filter-chip-pill[data-notebook="' + selectedNotebook + '"]').addClass('active');
+
+            // Update dropdown button label and badge
+            const labelText = selectedNotebook === 'all' ? 'All Notes' : selectedNotebook;
+            const countText = $(this).find('.item-count, .chip-count').first().text() || '';
+            $('#activeFilterLabel').text(labelText);
+            if (countText) {
+                $('#activeFilterCount').text(countText);
+            }
+
             applyFilter();
+        });
+
+        // Handle Custom Notebook Dropdown in Note Editor View
+        $(document).on('click', '.notebook-select-option', function(e) {
+            e.preventDefault();
+            const val = $(this).data('value');
+            if (val) {
+                const hiddenNotebookInput = document.getElementById('slct');
+                if (hiddenNotebookInput) {
+                    hiddenNotebookInput.value = val;
+                }
+                $('#selectedNotebookLabel').text(val);
+                $('.notebook-select-option').removeClass('active');
+                $(this).addClass('active');
+
+                if (typeof triggerDebouncedSave === 'function' && typeof performAutoSave === 'function') {
+                    triggerDebouncedSave();
+                    performAutoSave();
+                }
+            }
         });
 
         // 5. Entire Table Row & Note Card Click Navigation

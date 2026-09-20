@@ -57,23 +57,62 @@
         </div>
         {{/if}}
 
-        <!-- Notebook Filter Bar -->
-        {{#if fetched_notebooks.length}}
-        <div class="filter-toolbar mb-4">
-            <div class="filter-tabs">
-                <button type="button" class="filter-tab active" data-notebook="all">
-                    <span>All Notes</span>
-                    <span class="filter-tab-count">{{totalNotes}}</span>
-                </button>
-                {{#each fetched_notebooks}}
-                <button type="button" class="filter-tab" data-notebook="{{name}}">
-                    <span>{{name}}</span>
-                    <span class="filter-tab-count">{{noteCount}}</span>
-                </button>
-                {{/each}}
+        <!-- Redesigned Notebook Filter & Selection Toolbar -->
+        <div class="notes-filter-bar mb-4">
+            <div class="filter-bar-left">
+                <!-- Dropdown Notebook Selector -->
+                <div class="dropdown notebook-filter-dropdown">
+                    <button type="button" class="btn-filter-dropdown" id="notebookFilterDropdownBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Filter by Notebook">
+                        <span class="dropdown-filter-icon">📁</span>
+                        <span class="dropdown-filter-text" id="activeFilterLabel">All Notes</span>
+                        <span class="dropdown-filter-badge" id="activeFilterCount">{{totalNotes}}</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="dropdown-filter-chevron"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <div class="dropdown-menu custom-dropdown-popover notebook-filter-menu" aria-labelledby="notebookFilterDropdownBtn">
+                        <div class="dropdown-popover-header">
+                            <span>FILTER BY NOTEBOOK</span>
+                        </div>
+                        <div class="dropdown-popover-list">
+                            <button type="button" class="dropdown-popover-item filter-chip active" data-notebook="all">
+                                <span class="item-icon">📋</span>
+                                <span class="item-text">All Notes</span>
+                                <span class="item-count">{{totalNotes}}</span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="item-check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </button>
+                            {{#each fetched_notebooks}}
+                            <button type="button" class="dropdown-popover-item filter-chip" data-notebook="{{name}}">
+                                <span class="item-icon">📁</span>
+                                <span class="item-text">{{name}}</span>
+                                <span class="item-count">{{noteCount}}</span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="item-check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </button>
+                            {{/each}}
+                        </div>
+                        <div class="dropdown-divider my-1"></div>
+                        <a href="/notebooks" class="dropdown-popover-action">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-1.5"><path d="M12 5v14M5 12h14"/></svg>
+                            <span>Manage Notebooks</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Horizontal Quick Switcher Chips -->
+                {{#if fetched_notebooks.length}}
+                <div class="filter-chips-scroll">
+                    <button type="button" class="filter-chip-pill filter-chip active" data-notebook="all">
+                        <span>All</span>
+                        <span class="chip-count">{{totalNotes}}</span>
+                    </button>
+                    {{#each fetched_notebooks}}
+                    <button type="button" class="filter-chip-pill filter-chip" data-notebook="{{name}}">
+                        <span>{{name}}</span>
+                        <span class="chip-count">{{noteCount}}</span>
+                    </button>
+                    {{/each}}
+                </div>
+                {{/if}}
             </div>
         </div>
-        {{/if}}
 
         <!-- 1. GRID VIEW CONTAINER -->
         <div id="notesGridContainer">
