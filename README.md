@@ -1,166 +1,158 @@
-# NotesApp 📝
+# NotesApp
 
-> A sleek, minimalist, Notion-inspired personal and team note-taking workspace built for distraction-free writing, rich media formatting, and seamless organization.
+A clean, minimalist note-taking workspace built with Node.js, Express, MongoDB, and Handlebars. Designed for distraction-free writing, rich formatting, and straightforward organization.
 
 [![Node.js](https://img.shields.io/badge/Node.js-v18+-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Express.js](https://img.shields.io/badge/Express.js-v4.18-000000?style=flat-square&logo=express&logoColor=white)](https://expressjs.com/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248?style=flat-square&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
 [![Handlebars](https://img.shields.io/badge/Template-Handlebars.js-f0772b?style=flat-square)](https://handlebarsjs.com/)
-[![Design](https://img.shields.io/badge/Design_System-Poppins_SaaS-2563eb?style=flat-square)](https://fonts.google.com/specimen/Poppins)
 [![License](https://img.shields.io/badge/License-MIT-blue.style=flat-square)](LICENSE)
 
 ---
 
-## 🌟 The Story Behind NotesApp
+## The Story Behind NotesApp
 
-Every developer has a defining milestone—the project where abstract theory turns into tangible craftsmanship. For **Feril Sunu**, NotesApp was that pivotal journey in **2021**.
+Back in 2021, I started building NotesApp as a hands-on way to learn full-stack web development. I wanted to move beyond tutorials and build a real application from scratch, exploring how authentication, REST APIs, databases, and server-rendered templates fit together.
 
-Conceived as an entry point into full-stack software engineering, NotesApp began with a fundamental question: *How can we craft a digital workspace that feels as effortless, fast, and tactile as thought itself?* What started as an exploration of asynchronous JavaScript, RESTful APIs, and document datastores has since evolved into a refined, production-grade workspace application combining modern UX sensibilities, intelligent clipboard parsing, and resilient auto-saving architecture.
-
----
-
-## ✨ Key Capabilities & Features
-
-### 📄 Borderless Notion-Style Workspace
-- **Seamless Canvas**: Write distraction-free on a clean, borderless document surface.
-- **Dynamic Multi-line Titles**: Large typography titles wrap effortlessly and auto-expand to accommodate long headings without horizontal truncation.
-- **Zen Focus & Sidebar Collapse**: Toggle the sidebar anytime (`Ctrl+\`) to give your thoughts the full viewport.
-- **Full-Width Canvas Mode**: Expand the writing canvas from compact 860px to 100% viewport width with one click.
-
-### ⚡ Intelligent Auto-Save Engine
-- **Zero Interruption**: Say goodbye to manual save buttons. Changes automatically synchronize to the database in real-time.
-- **Client State Diffing**: Sophisticated dirty-checking compares document states before issuing requests, eliminating redundant writes.
-- **Debounced Network I/O**: Network requests are intelligently throttled (800ms debounce) to optimize server throughput.
-- **Page Unload Protection**: Utilizes the `Navigator.sendBeacon` API to ensure in-flight edits are flushed reliably even when navigating away or closing tabs.
-
-### 📋 Rich Text & ChatGPT Clipboard Sanitizer
-- **Smart Paste Processing**: Copy content directly from ChatGPT, web articles, or Markdown sources without losing headings, bullet lists, code blocks, or bold formatting.
-- **Style Cleansing**: Strips invasive external background colors, foreign fonts, and problematic root-level bold tags to keep your document typography clean and uniform.
-- **Formatting Toolbar**: Floating, sticky formatting controls for Headings (H1/H2/H3), Blockquotes, Code Blocks, Strikethrough, Alignments, and Links. Hide or show toolbar with `Ctrl+Shift+F`.
-
-### 📂 Notebooks & Hierarchical Organization
-- **Notebook Management**: Group notes by projects, personal journals, or technical documentation.
-- **Instant Switcher**: Rapidly switch or assign notebook categories from the breadcrumb selector.
-- **CRUD Operations**: Full notebook creation, renaming, and filtering workflows.
-
-### 🔍 Dual Views & Instant Search
-- **Grid vs. Table View**: Switch seamlessly between visual cards with rich content previews and high-density data tables.
-- **Instant Search**: Real-time client-side search filtering across titles, content, and notebooks with zero latency.
-- **Interactive Rows**: Click anywhere on a table row or card to immediately open and edit.
-
-### 🛡️ Enterprise-Grade Authentication & Security
-- **Passport.js Authentication**: Secure session-based auth with salted and hashed passwords using `bcryptjs`.
-- **Email Verification**: Built-in verification workflow via Nodemailer and secure token hashing.
-- **Session Protection**: Encrypted MongoDB session storage with `express-session` and `connect-mongo`.
+Over time, as I used the app and refined my development skills, I kept improving it: moving to a borderless Notion-style interface, building an auto-save engine so I never lose notes, adding smart clipboard pasting for content from tools like ChatGPT, and polishing the overall workflow. NotesApp represents both where my full-stack journey began and how continuous iteration can turn a learning project into a daily driver.
 
 ---
 
-## 🛠️ Architecture & Tech Stack
+## Features
 
-| Layer | Technology | Purpose |
-| :--- | :--- | :--- |
-| **Runtime** | Node.js | Asynchronous event-driven JavaScript server environment |
-| **Web Framework** | Express.js | Robust routing, middleware pipeline, and HTTP server |
-| **Database** | MongoDB & Mongoose | Schematized document database with ACID transactions |
-| **Template Engine** | Express-Handlebars | Semantic server-rendered views with custom helpers |
-| **Authentication** | Passport.js & Bcrypt | User authentication, session management, password hashing |
-| **Typography & UI** | Poppins & CSS Design System | Modern minimalist SaaS aesthetics, sleek custom scrollbars |
-| **Client-Side Engine** | Modern Vanilla JS & jQuery | Contenteditable engine, DOMParser sanitizer, DataTables |
+### Borderless Document Editor
+- **Distraction-Free Canvas**: Clean, borderless writing surface focused on your text.
+- **Auto-Expanding Titles**: Multi-line note titles that wrap naturally as you type instead of cutting off.
+- **Focus Mode**: Collapse the sidebar anytime with `Ctrl+\` to give yourself more room to write.
+- **Full-Width Toggle**: Switch between a centered reading column and full-width canvas.
+
+### Auto-Save Engine
+- **No Manual Saving Needed**: Notes sync to the database automatically as you write.
+- **Efficient Diffing**: Compares note state before firing network requests, skipping redundant database writes.
+- **Debounced Requests**: Changes are batched with an 800ms debounce to keep server load light.
+- **Beacon API Support**: Uses `navigator.sendBeacon` to save any pending edits even if you close the tab or navigate away.
+
+### Rich Text & Clipboard Handling
+- **Smart Paste Support**: Pasting from ChatGPT or web pages preserves structure (headings, lists, code blocks, bold, italics) without breaking note styling or turning entire paragraphs bold.
+- **Formatting Controls**: Inline toolbar for headings, quotes, code blocks, lists, and links. Can be toggled with `Ctrl+Shift+F`.
+
+### Notebooks & Organization
+- **Notebook Categories**: Group notes into dedicated notebooks (Work, Personal, Ideas, etc.).
+- **Quick Switcher**: Change or assign notebooks directly from the editor header.
+- **Manage Notebooks**: Create, rename, and organize notebooks from a dedicated dashboard.
+
+### Dual Views & Search
+- **Grid and Table Views**: Choose between visual preview cards or a compact data table.
+- **Live Search**: Instant client-side filtering across note titles, notebooks, and content.
+- **Clickable Rows**: Click anywhere on a table row or card to jump straight into editing.
+
+### Authentication & Security
+- **User Accounts**: Authentication powered by Passport.js with password hashing via `bcryptjs`.
+- **Email Confirmation**: Account activation flow via Nodemailer.
+- **Session Security**: Session cookies stored and encrypted in MongoDB.
 
 ---
 
-## ⌨️ Keyboard Shortcuts Reference
+## Tech Stack
+
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB with Mongoose ODM
+- **Templating**: Express-Handlebars
+- **Authentication**: Passport.js (Local Strategy), Bcryptjs
+- **Frontend / Styling**: Vanilla JavaScript, jQuery, Bootstrap 4.6, Poppins typography, custom CSS
+
+---
+
+## Keyboard Shortcuts
 
 | Shortcut | Action | Scope |
 | :--- | :--- | :--- |
-| <kbd>Ctrl</kbd> + <kbd>\</kbd> or <kbd>Cmd</kbd> + <kbd>\</kbd> | Toggle Sidebar (Focus Mode) | Global |
-| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd> | Toggle Formatting Toolbar | Editor Canvas |
-| <kbd>Ctrl</kbd> + <kbd>B</kbd> | Bold Selection | Editor Canvas |
-| <kbd>Ctrl</kbd> + <kbd>I</kbd> | Italicize Selection | Editor Canvas |
-| <kbd>Ctrl</kbd> + <kbd>U</kbd> | Underline Selection | Editor Canvas |
-| <kbd>Tab</kbd> | Indent Text (4 spaces) | Editor Canvas |
-| <kbd>Enter</kbd> | Move from Title to Editor Body | Title Field |
+| `Ctrl + \` or `Cmd + \` | Toggle sidebar (Focus mode) | Anywhere |
+| `Ctrl + Shift + F` | Toggle formatting toolbar | Editor |
+| `Ctrl + B` | Bold text | Editor |
+| `Ctrl + I` | Italicize text | Editor |
+| `Ctrl + U` | Underline text | Editor |
+| `Tab` | Insert 4-space indent | Editor |
+| `Enter` | Move focus from title to note body | Title field |
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/) (v16.0 or higher recommended)
-- [MongoDB](https://www.mongodb.com/) (Local instance or MongoDB Atlas URI)
-- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+- Node.js (v16 or higher)
+- MongoDB (local instance or MongoDB Atlas connection string)
+- npm or yarn
 
-### 1. Clone the Repository
+### 1. Clone the repository
 ```bash
 git clone https://github.com/ferilsunu/NotesApp.git
 cd NotesApp
 ```
 
-### 2. Install Dependencies
+### 2. Install dependencies
 ```bash
 npm install
 ```
 
-### 3. Configure Environment Variables
-Create a `.env` file in the root directory:
+### 3. Set up environment variables
+Create a `.env` file in the project root:
 
 ```env
 PORT=3000
 DB_URL=mongodb://localhost:27017/notesapp
-JWT_SECRET=your_jwt_secret_key_here
+JWT_SECRET=your_jwt_secret_key
 USER=your_email@domain.com
 PASSWORD=your_email_app_password
 APP_URL=http://localhost:3000/
 ```
 
-### 4. Run Application
+### 4. Run the app
 ```bash
-# Start the production server
+# Production start
 npm start
 
-# Or run with nodemon for live development reloading
+# Development mode with auto-reload
 npm run dev
 ```
 
-Visit `http://localhost:3000` in your browser.
+Open `http://localhost:3000` in your browser.
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
 NotesApp/
-├── config/              # Passport & authentication configuration
-├── models/              # Mongoose database models (User, Note, Notebook)
-├── public/              # Static assets
+├── config/              # Passport authentication configuration
+├── models/              # Mongoose data models (User, Note, Notebook)
+├── public/              # Static files (CSS stylesheets, custom scripts, icons)
 │   ├── css/
-│   │   └── custom-style.css   # Poppins design system & responsive styling
+│   │   └── custom-style.css
 │   └── js/
-│       └── custom-script.js   # Global utility scripts
-├── routes/              # Express routing modules
-│   ├── auth.js          # Authentication & verification endpoints
-│   ├── notes.js         # Notes CRUD & auto-save endpoints
-│   └── notebooks.js     # Notebooks management endpoints
-├── views/               # Handlebars templates
-│   ├── layouts/         # Base layout wrappers
-│   ├── partials/        # Reusable headers, footers, sidebars, modals
+│       └── custom-script.js
+├── routes/              # Express route handlers
+│   ├── auth.js          # Authentication and email verification
+│   ├── notes.js         # Notes CRUD and auto-save endpoints
+│   └── notebooks.js     # Notebook management
+├── views/               # Handlebars views and partial templates
+│   ├── layouts/
+│   ├── partials/
 │   ├── add_note.handlebars
 │   ├── edit_note.handlebars
 │   ├── index.handlebars
 │   └── notebooks.handlebars
-├── .env.example         # Environment template
-├── app.js               # Application entry point & middleware bootstrap
-└── package.json         # Project metadata & dependencies
+├── app.js               # Express application entry point
+├── package.json
+└── README.md
 ```
 
 ---
 
-## 📄 License
+## License
 
-This project is licensed under the [MIT License](LICENSE) - feel free to use it for personal or commercial projects.
+This project is licensed under the [MIT License](LICENSE).
 
 ---
 
-<div align="center">
-  <sub>Crafted with passion and precision by <strong><a href="https://github.com/ferilsunu">Feril Sunu</a></strong></sub>
-</div>
+Built by [Feril Sunu](https://github.com/ferilsunu).
