@@ -161,40 +161,19 @@
             applyFilter();
         });
 
-        // 5. Quick View Modal Trigger
-        $(document).on('click', '.quick-view-btn, .quick-view-trigger', function(e) {
-            e.preventDefault();
-            const btn = $(this);
-            const id = btn.data('id');
-            const title = btn.data('title') || 'Untitled Note';
-            const notebook = btn.data('notebook') || 'General';
-            const date = btn.data('date') || '';
-            const noteContent = btn.data('note') || '';
-
-            $('#modalNoteTitle').text(title);
-            $('#modalNotebookPill').text(notebook);
-            $('#modalDateBadge').text(date);
-            $('#modalNoteBody').html(noteContent || '<p class="text-muted italic">No content available.</p>');
-            $('#modalEditLink').attr('href', '/SingleNote/' + id);
-
-            $('#quickViewModal').modal('show');
+        // 5. Entire Table Row & Note Card Click Navigation
+        $(document).on('click', '.clickable-row, .note-box[data-href]', function (e) {
+            // Ignore if clicked on an anchor, button, input, form, or delete button
+            if ($(e.target).closest('a, button, form, input, select, textarea').length) {
+                return;
+            }
+            const href = $(this).data('href');
+            if (href) {
+                window.location.href = href;
+            }
         });
 
-        // 6. Copy Modal Note Text
-        $('#modalCopyBtn').on('click', function() {
-            const bodyEl = document.getElementById('modalNoteBody');
-            const textToCopy = bodyEl.innerText || bodyEl.textContent;
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                const copyBtn = $(this);
-                const originalHtml = copyBtn.html();
-                copyBtn.html('<span>✓ Copied!</span>');
-                setTimeout(() => {
-                    copyBtn.html(originalHtml);
-                }, 1800);
-            });
-        });
-
-        // 7. Edit Notebook AJAX population
+        // 6. Edit Notebook AJAX population
         $('.edit-button').on('click', function () {
             const id = $(this).val();
             $.ajax({
@@ -208,7 +187,7 @@
             });
         });
 
-        // 8. Native Modern Rich Text Editor
+        // 7. Native Modern Rich Text Editor
         const canvas = document.getElementById('richEditorCanvas');
         const hiddenInput = document.getElementById('hiddenNoteContent');
         const editorForm = document.getElementById('noteEditorForm');
@@ -337,6 +316,55 @@
                     updateToolbarStates();
                 }
             });
+
+            // 8. Rich Editor Formatting Panel / Toolbar Toggle (with LocalStorage persistence)
+            const notionToolbar = $('#notionToolbar');
+            const btnToggleToolbar = $('#btnToggleToolbar');
+            const btnCloseToolbar = $('#btnCloseToolbar');
+
+            function setToolbarState(isVisible) {
+                if (isVisible) {
+                    notionToolbar.removeClass('toolbar-hidden');
+                    btnToggleToolbar.addClass('active');
+                    localStorage.setItem('notesapp_editor_toolbar_visible', 'true');
+                } else {
+                    notionToolbar.addClass('toolbar-hidden');
+                    btnToggleToolbar.removeClass('active');
+                    localStorage.setItem('notesapp_editor_toolbar_visible', 'false');
+                }
+            }
+
+            function toggleToolbar() {
+                const isCurrentlyHidden = notionToolbar.hasClass('toolbar-hidden');
+                setToolbarState(isCurrentlyHidden);
+            }
+
+            if (notionToolbar.length) {
+                const savedToolbarState = localStorage.getItem('notesapp_editor_toolbar_visible');
+                if (savedToolbarState === 'false') {
+                    setToolbarState(false);
+                } else {
+                    setToolbarState(true);
+                }
+
+                btnToggleToolbar.on('click', function(e) {
+                    e.preventDefault();
+                    toggleToolbar();
+                });
+
+                btnCloseToolbar.on('click', function(e) {
+                    e.preventDefault();
+                    setToolbarState(false);
+                });
+
+                // Keyboard shortcut: Ctrl+Shift+F or Cmd+Shift+F to toggle toolbar
+                $(document).on('keydown', function(e) {
+                    if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'F' || e.key === 'f')) {
+                        e.preventDefault();
+                        toggleToolbar();
+                    }
+                });
+            }
         }
 
         // 9. Sidebar Focus / Fullscreen Mode Toggle (with LocalStorage persistence)

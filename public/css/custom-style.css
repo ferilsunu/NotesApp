@@ -1009,6 +1009,22 @@ body.sidebar-collapsed .app-sidebar,
   background: #f8fafc !important;
 }
 
+.clean-table tbody tr.clickable-row {
+  cursor: pointer !important;
+}
+
+.clean-table tbody tr.clickable-row:hover {
+  background: #f1f5f9 !important;
+}
+
+.clean-table tbody tr.clickable-row:hover .table-note-title {
+  color: #2563eb !important;
+}
+
+.note-card-item .note-box {
+  cursor: pointer !important;
+}
+
 .clean-table-footer {
   display: flex;
   align-items: center;
@@ -1528,6 +1544,11 @@ body.sidebar-collapsed .app-sidebar,
   box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
   margin-bottom: 24px;
   user-select: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.notion-toolbar.toolbar-hidden {
+  display: none !important;
 }
 
 .notion-canvas {
