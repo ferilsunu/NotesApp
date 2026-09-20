@@ -1,4 +1,4 @@
-# NotesApp
+# NoteX
 
 A clean, minimalist note-taking workspace built with Node.js, Express, MongoDB, and Handlebars. Designed for distraction-free writing, rich formatting, and straightforward organization.
 
@@ -10,11 +10,11 @@ A clean, minimalist note-taking workspace built with Node.js, Express, MongoDB, 
 
 ---
 
-## The Story Behind NotesApp
+## The Story Behind NoteX
 
-Back in 2021, I started building NotesApp as a hands-on way to learn full-stack web development. I wanted to move beyond tutorials and build a real application from scratch, exploring how authentication, REST APIs, databases, and server-rendered templates fit together.
+Back in 2021, I started building NoteX as a hands-on way to learn full-stack web development. I wanted to move beyond tutorials and build a real application from scratch, exploring how authentication, REST APIs, databases, and server-rendered templates fit together.
 
-Over time, as I used the app and refined my development skills, I kept improving it: moving to a borderless Notion-style interface, building an auto-save engine so I never lose notes, adding rich text formatting options, and polishing the overall workflow. NotesApp represents both where my full-stack journey began and how continuous iteration can turn a learning project into a daily driver.
+Over time, as I used the app and refined my development skills, I kept improving it: moving to a borderless Notion-style interface, building an auto-save engine so I never lose notes, adding rich text formatting options, and polishing the overall workflow. NoteX represents both where my full-stack journey began and how continuous iteration can turn a learning project into a daily driver.
 
 ---
 
@@ -85,8 +85,8 @@ Over time, as I used the app and refined my development skills, I kept improving
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/ferilsunu/NotesApp.git
-cd NotesApp
+git clone https://github.com/ferilsunu/NoteX.git
+cd NoteX
 ```
 
 ### 2. Install dependencies
@@ -99,7 +99,7 @@ Create a `.env` file in the project root:
 
 ```env
 PORT=3000
-DB_URL=mongodb://localhost:27017/notesapp
+DB_URL=mongodb://localhost:27017/notex
 JWT_SECRET=your_jwt_secret_key
 USER=your_email@domain.com
 PASSWORD=your_email_app_password
@@ -122,7 +122,7 @@ Open `http://localhost:3000` in your browser.
 ## Project Structure
 
 ```text
-NotesApp/
+NoteX/
 ├── config/              # Passport authentication configuration
 ├── models/              # Mongoose data models (User, Note, Notebook)
 ├── public/              # Static files (CSS stylesheets, custom scripts, icons)

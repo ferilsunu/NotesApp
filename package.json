@@ -1,7 +1,7 @@
 {
-  "name": "notes-app",
+  "name": "notex",
   "version": "1.0.0",
-  "description": "CRUD your notes :)",
+  "description": "NoteX • Modern minimalist personal and team workspace",
   "main": "app.js",
   "scripts": {
     "start": "node app.js"

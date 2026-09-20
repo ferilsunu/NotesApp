@@ -23,7 +23,7 @@ module.exports = {
     const confirmUrl = `${baseUrl}confirm/${confirmationCode}`;
 
     return transport.sendMail({
-      from: `"NotesApp" <${smtpUser}>`,
+      from: `"NoteX" <${smtpUser}>`,
       to: email,
       subject: "Confirm your account",
       html: `<div>

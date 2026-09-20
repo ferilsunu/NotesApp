@@ -6,8 +6,8 @@ const dbUrl = process.env.DB_URL || 'mongodb://notesapp_user:j7C9AOEdbAhntvHb36n
 
 mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true }).then(async () => {
   const noteId = '68ea6be8268492046e0b887c';
-  const newTitle = 'Welcome to NotesApp • The Story Behind It';
-  const newContent = `<h2>Welcome to NotesApp! 👋</h2>
+  const newTitle = 'Welcome to NoteX • The Story Behind It';
+  const newContent = `<h2>Welcome to NoteX! 👋</h2>
 <p>If you are reading this, welcome to my personal workspace. This project holds a deeply sentimental place in my journey as a software engineer.</p>
 
 <h3>🌱 Where It All Began (2021)</h3>
@@ -16,7 +16,7 @@ mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true }).the
 <p>More than just building a note-taking tool, this project marked my <strong>official entry point into full-stack web development</strong>. Every layer of this application—from the Node.js/Express backend and MongoDB database models to Handlebars templating and authentication workflows—served as the foundational classroom where I learned how real-world full-stack systems operate.</p>
 
 <blockquote>
-  "Every great milestone in software engineering begins with a project you care about deeply. For me, NotesApp was that spark."
+  "Every great milestone in software engineering begins with a project you care about deeply. For me, NoteX was that spark."
   <br>— <strong>Feril Sunu</strong>
 </blockquote>
 
