@@ -742,7 +742,23 @@
             }
         }
 
-        // 9. Sidebar Focus / Fullscreen Mode Toggle (with LocalStorage persistence)
+        // 9. Sidebar Focus / Fullscreen Mode Toggle & Mobile Drawer
+        function isMobileView() {
+            return window.innerWidth < 992;
+        }
+
+        function openMobileSidebar() {
+            $('body').addClass('sidebar-mobile-open');
+            $('#sidebarBackdrop').addClass('active');
+            $('#btnSidebarToggle').addClass('active');
+        }
+
+        function closeMobileSidebar() {
+            $('body').removeClass('sidebar-mobile-open');
+            $('#sidebarBackdrop').removeClass('active');
+            $('#btnSidebarToggle').removeClass('active');
+        }
+
         function setSidebarState(isCollapsed) {
             if (isCollapsed) {
                 $('body').addClass('sidebar-collapsed');
@@ -758,19 +774,53 @@
         }
 
         function toggleSidebar() {
-            const isCurrentlyCollapsed = $('body').hasClass('sidebar-collapsed');
-            setSidebarState(!isCurrentlyCollapsed);
+            if (isMobileView()) {
+                if ($('body').hasClass('sidebar-mobile-open')) {
+                    closeMobileSidebar();
+                } else {
+                    openMobileSidebar();
+                }
+            } else {
+                const isCurrentlyCollapsed = $('body').hasClass('sidebar-collapsed');
+                setSidebarState(!isCurrentlyCollapsed);
+            }
         }
 
-        // Initialize saved sidebar preference
-        const savedSidebarState = localStorage.getItem('notesapp_sidebar_collapsed');
-        if (savedSidebarState === 'true') {
-            setSidebarState(true);
+        // Initialize saved desktop sidebar preference
+        if (!isMobileView()) {
+            const savedSidebarState = localStorage.getItem('notesapp_sidebar_collapsed');
+            if (savedSidebarState === 'true') {
+                setSidebarState(true);
+            }
         }
 
-        $(document).on('click', '#btnSidebarCollapse, #btnSidebarToggle', function(e) {
+        $(document).on('click', '#btnSidebarToggle', function(e) {
             e.preventDefault();
             toggleSidebar();
+        });
+
+        $(document).on('click', '#btnSidebarCollapse', function(e) {
+            e.preventDefault();
+            setSidebarState(true);
+        });
+
+        $(document).on('click', '#btnSidebarClose, #sidebarBackdrop', function(e) {
+            e.preventDefault();
+            closeMobileSidebar();
+        });
+
+        // Auto close mobile drawer when navigating
+        $(document).on('click', '.app-sidebar .nav-link, .app-sidebar .btn-create-note', function() {
+            if (isMobileView()) {
+                closeMobileSidebar();
+            }
+        });
+
+        // Close mobile drawer on window resize to desktop
+        $(window).on('resize', function() {
+            if (!isMobileView() && $('body').hasClass('sidebar-mobile-open')) {
+                closeMobileSidebar();
+            }
         });
 
         // Keyboard Shortcut: Ctrl+\ or Cmd+\ to toggle sidebar

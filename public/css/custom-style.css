@@ -2483,3 +2483,405 @@ body.sidebar-collapsed .app-sidebar,
   background: var(--bg-subtle);
   color: var(--text-main) !important;
 }
+
+/* =========================================================
+   COMPREHENSIVE MOBILE & RESPONSIVE DESIGN SYSTEM
+   ========================================================= */
+
+/* Mobile Sidebar Backdrop Overlay */
+.sidebar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 1040;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.sidebar-backdrop.active,
+body.sidebar-mobile-open .sidebar-backdrop {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Mobile Sidebar Close Button */
+.btn-sidebar-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-main);
+  background: #ffffff;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+
+.btn-sidebar-close:hover {
+  background: var(--bg-subtle);
+  color: var(--text-main);
+  border-color: var(--border-dark);
+}
+
+/* =========================================================
+   TABLET & MOBILE BREAKPOINTS (max-width: 991.98px)
+   ========================================================= */
+@media (max-width: 991.98px) {
+  /* Off-canvas Mobile Sidebar Drawer */
+  .app-sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    height: 100vh !important;
+    width: 280px !important;
+    max-width: 84vw !important;
+    z-index: 1050 !important;
+    transform: translateX(-100%) !important;
+    margin-left: 0 !important;
+    box-shadow: none !important;
+    transition: transform 0.26s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.26s ease !important;
+  }
+
+  body.sidebar-mobile-open .app-sidebar {
+    transform: translateX(0) !important;
+    box-shadow: 0 10px 40px rgba(15, 23, 42, 0.28) !important;
+  }
+
+  body.sidebar-collapsed .app-sidebar,
+  .app-layout.sidebar-collapsed .app-sidebar {
+    margin-left: 0 !important;
+  }
+
+  /* Prevent background scrolling when mobile sidebar is open */
+  body.sidebar-mobile-open {
+    overflow: hidden !important;
+  }
+
+  .app-main-content {
+    width: 100% !important;
+    min-width: 100% !important;
+  }
+
+  .workspace-topbar {
+    padding: 0 20px !important;
+  }
+
+  .workspace-body {
+    padding: 20px !important;
+  }
+
+  .notes-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)) !important;
+    gap: 14px !important;
+  }
+
+  .notebooks-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)) !important;
+    gap: 14px !important;
+  }
+
+  .notion-doc-surface {
+    padding: 28px 24px 80px !important;
+  }
+}
+
+/* =========================================================
+   MOBILE SCREENS BREAKPOINT (max-width: 767.98px)
+   ========================================================= */
+@media (max-width: 767.98px) {
+  /* Workspace Topbar Layout */
+  .workspace-topbar {
+    height: auto !important;
+    min-height: 56px !important;
+    padding: 10px 14px !important;
+    flex-wrap: wrap !important;
+    gap: 8px 10px !important;
+  }
+
+  .topbar-left {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+
+  .topbar-title {
+    font-size: 16px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .topbar-count-badge {
+    font-size: 11px !important;
+    padding: 2px 7px !important;
+    margin-left: 6px !important;
+  }
+
+  .topbar-right {
+    margin-left: auto !important;
+    gap: 6px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .topbar-center {
+    order: 3 !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    margin: 4px 0 2px !important;
+  }
+
+  .topbar-search-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .topbar-search-input {
+    height: 38px !important;
+    font-size: 13.5px !important;
+    padding-left: 36px !important;
+  }
+
+  /* Notion Editor Topbar */
+  .notion-topbar {
+    padding: 8px 12px !important;
+    min-height: 52px !important;
+    gap: 8px !important;
+  }
+
+  .notion-breadcrumb {
+    max-width: 100% !important;
+    gap: 4px !important;
+  }
+
+  .notion-notebook-pill-btn {
+    padding: 3px 8px !important;
+    font-size: 12px !important;
+    max-width: 150px !important;
+  }
+
+  .notebook-pill-label {
+    max-width: 85px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  .notebook-manage-pill {
+    display: none !important;
+  }
+
+  .notion-save-status {
+    padding: 3px 8px !important;
+    font-size: 12px !important;
+  }
+
+  /* Editor Canvas & Document */
+  .notion-viewport {
+    padding: 0 !important;
+  }
+
+  .notion-doc-surface {
+    padding: 18px 14px 70px !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .notion-title-input {
+    font-size: 1.6rem !important;
+    line-height: 1.25 !important;
+    margin-bottom: 12px !important;
+  }
+
+  .notion-meta-row {
+    margin-bottom: 16px !important;
+    padding-bottom: 12px !important;
+    font-size: 12px !important;
+  }
+
+  /* Rich Editor Sticky Mobile Touch Toolbar */
+  .rich-editor-toolbar {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 30 !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 6px 8px !important;
+    gap: 3px !important;
+    background: #ffffff !important;
+    border-radius: var(--radius-md) var(--radius-md) 0 0 !important;
+    scrollbar-width: none !important;
+  }
+
+  .rich-editor-toolbar::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .rich-editor-btn {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    padding: 0 !important;
+    flex-shrink: 0 !important;
+  }
+
+  .rich-editor-select-wrap {
+    flex-shrink: 0 !important;
+  }
+
+  .rich-editor-select {
+    height: 32px !important;
+    font-size: 12px !important;
+    padding: 0 20px 0 8px !important;
+  }
+
+  .custom-rich-editor {
+    font-size: 15px !important;
+    line-height: 1.65 !important;
+    padding: 14px 12px !important;
+    min-height: 300px !important;
+  }
+
+  /* Workspace Body & Content */
+  .workspace-body {
+    padding: 14px 12px 32px !important;
+  }
+
+  .notebook-toolbar {
+    padding: 8px 10px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .notebook-pills-scroll {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding-bottom: 4px !important;
+    scrollbar-width: none !important;
+  }
+
+  .notebook-pills-scroll::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .filter-chip-pill {
+    padding: 5px 10px !important;
+    font-size: 12px !important;
+    white-space: nowrap !important;
+  }
+
+  /* DataTables Mobile Optimization */
+  .notes-table-wrap {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    border-radius: var(--radius-md) !important;
+  }
+
+  .clean-table-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    padding: 12px !important;
+  }
+
+  .clean-table-footer {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 12px !important;
+    text-align: center !important;
+  }
+
+  table.dataTable {
+    min-width: 520px !important;
+  }
+
+  /* Footer */
+  .workspace-footer {
+    padding: 14px 16px !important;
+  }
+
+  .footer-inner {
+    flex-direction: column !important;
+    gap: 8px !important;
+    text-align: center !important;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE PHONES (max-width: 575.98px)
+   ========================================================= */
+@media (max-width: 575.98px) {
+  .notes-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .notebooks-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .note-box {
+    padding: 14px 14px !important;
+    border-radius: var(--radius-md) !important;
+  }
+
+  .note-box-title {
+    font-size: 15px !important;
+  }
+
+  .note-box-preview {
+    font-size: 12.5px !important;
+    -webkit-line-clamp: 3 !important;
+  }
+
+  .notebook-box {
+    padding: 16px 14px !important;
+    border-radius: var(--radius-md) !important;
+  }
+
+  /* Modals & Popovers Full Screen Fitting */
+  .modal-dialog {
+    margin: 12px auto !important;
+    max-width: calc(100vw - 24px) !important;
+  }
+
+  .custom-dropdown-popover {
+    max-width: calc(100vw - 28px) !important;
+  }
+
+  /* Auth Section & Cards */
+  .auth-section {
+    padding: 24px 14px !important;
+  }
+
+  .auth-container {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  .auth-card {
+    padding: 24px 18px !important;
+    border-radius: var(--radius-lg) !important;
+  }
+
+  .auth-heading {
+    font-size: 20px !important;
+  }
+
+  .auth-subheading {
+    font-size: 12.5px !important;
+  }
+}
+
