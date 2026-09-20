@@ -52,8 +52,12 @@
         const gridContainer = $('#notesGridContainer');
         const tableContainer = $('#notesTableContainer');
 
+        function isSmallScreen() {
+            return window.innerWidth < 768;
+        }
+
         const savedView = localStorage.getItem('notes_view_pref') || 'grid';
-        if (savedView === 'table') {
+        if (savedView === 'table' && !isSmallScreen()) {
             switchToTableView();
         } else {
             switchToGridView();
@@ -65,6 +69,7 @@
         });
 
         btnTableView.on('click', function() {
+            if (isSmallScreen()) return;
             switchToTableView();
             localStorage.setItem('notes_view_pref', 'table');
         });
@@ -77,11 +82,21 @@
         }
 
         function switchToTableView() {
+            if (isSmallScreen()) {
+                switchToGridView();
+                return;
+            }
             btnTableView.addClass('active');
             btnGridView.removeClass('active');
             gridContainer.addClass('d-none');
             tableContainer.removeClass('d-none');
         }
+
+        $(window).on('resize', function() {
+            if (isSmallScreen() && !tableContainer.hasClass('d-none')) {
+                switchToGridView();
+            }
+        });
 
         // 4. Live Search & Notebook Chip Filtering
         let activeNotebookFilter = 'all';

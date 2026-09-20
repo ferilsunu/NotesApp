@@ -2633,6 +2633,11 @@ body.sidebar-mobile-open .sidebar-backdrop {
     flex-shrink: 0 !important;
   }
 
+  /* Hide List/Table View Switcher on Mobile */
+  .view-toggle-wrap {
+    display: none !important;
+  }
+
   .topbar-center {
     order: 3 !important;
     width: 100% !important;
