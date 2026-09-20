@@ -14,7 +14,7 @@ A clean, minimalist note-taking workspace built with Node.js, Express, MongoDB, 
 
 Back in 2021, I started building NotesApp as a hands-on way to learn full-stack web development. I wanted to move beyond tutorials and build a real application from scratch, exploring how authentication, REST APIs, databases, and server-rendered templates fit together.
 
-Over time, as I used the app and refined my development skills, I kept improving it: moving to a borderless Notion-style interface, building an auto-save engine so I never lose notes, adding smart clipboard pasting for content from tools like ChatGPT, and polishing the overall workflow. NotesApp represents both where my full-stack journey began and how continuous iteration can turn a learning project into a daily driver.
+Over time, as I used the app and refined my development skills, I kept improving it: moving to a borderless Notion-style interface, building an auto-save engine so I never lose notes, adding rich text formatting options, and polishing the overall workflow. NotesApp represents both where my full-stack journey began and how continuous iteration can turn a learning project into a daily driver.
 
 ---
 
@@ -32,9 +32,8 @@ Over time, as I used the app and refined my development skills, I kept improving
 - **Debounced Requests**: Changes are batched with an 800ms debounce to keep server load light.
 - **Beacon API Support**: Uses `navigator.sendBeacon` to save any pending edits even if you close the tab or navigate away.
 
-### Rich Text & Clipboard Handling
-- **Smart Paste Support**: Pasting from ChatGPT or web pages preserves structure (headings, lists, code blocks, bold, italics) without breaking note styling or turning entire paragraphs bold.
-- **Formatting Controls**: Inline toolbar for headings, quotes, code blocks, lists, and links. Can be toggled with `Ctrl+Shift+F`.
+### Rich Text Formatting
+- **Formatting Controls**: Inline toolbar for text styles, font sizes, headings, quotes, code blocks, lists, text alignment, and links. Can be toggled with `Ctrl+Shift+F`.
 
 ### Notebooks & Organization
 - **Notebook Categories**: Group notes into dedicated notebooks (Work, Personal, Ideas, etc.).

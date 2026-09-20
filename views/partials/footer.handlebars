@@ -415,69 +415,106 @@
                 return div.innerHTML;
             }
 
-            function insertCleanHtml(html) {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-
-                // Remove unwanted script, style, and metadata tags
-                const elementsToRemove = doc.querySelectorAll('style, script, meta, link, title, head, svg, path, iframe');
-                elementsToRemove.forEach(el => el.remove());
-
-                // Sanitize elements: strip inline styles, classes, IDs that override fonts/colors/line-height
-                const allNodes = doc.body.querySelectorAll('*');
-                allNodes.forEach(el => {
-                    const tag = el.tagName.toLowerCase();
-                    el.removeAttribute('style');
-                    el.removeAttribute('class');
-                    el.removeAttribute('id');
-                    el.removeAttribute('data-start');
-                    el.removeAttribute('data-end');
-                    el.removeAttribute('data-is-last-node');
-
-                    // If generic container span or div with no specific tag semantics, unwrap it
-                    if (tag === 'span' || tag === 'div') {
-                        const parent = el.parentNode;
-                        if (parent) {
-                            while (el.firstChild) {
-                                parent.insertBefore(el.firstChild, el);
-                            }
-                            parent.removeChild(el);
-                        }
-                    }
-                });
-
-                const cleanBody = doc.body.innerHTML;
-                if (cleanBody && cleanBody.trim()) {
-                    document.execCommand('insertHTML', false, cleanBody);
+            function insertHtmlAtCursor(html) {
+                canvas.focus();
+                const sel = window.getSelection();
+                if (!sel || sel.rangeCount === 0) {
+                    document.execCommand('insertHTML', false, html);
+                    return;
                 }
-            }
 
-            function insertCleanPlainText(text) {
-                const lines = text.split(/\r\n|\r|\n/);
-                if (lines.length <= 1) {
-                    document.execCommand('insertText', false, text);
-                } else {
-                    const html = lines.map(line => {
-                        const trimmed = line.trim();
-                        return trimmed ? '<p>' + escapeHtml(line) + '</p>' : '<p><br></p>';
-                    }).join('');
+                let range = sel.getRangeAt(0);
+                if (!canvas.contains(range.commonAncestorContainer)) {
+                    canvas.focus();
+                    range = document.createRange();
+                    range.selectNodeContents(canvas);
+                    range.collapse(false);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }
+
+                try {
+                    range.deleteContents();
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = html;
+                    const frag = document.createDocumentFragment();
+                    let node, lastNode;
+                    while ((node = tempDiv.firstChild)) {
+                        lastNode = frag.appendChild(node);
+                    }
+                    range.insertNode(frag);
+
+                    if (lastNode) {
+                        const newRange = range.cloneRange();
+                        newRange.setStartAfter(lastNode);
+                        newRange.collapse(true);
+                        sel.removeAllRanges();
+                        sel.addRange(newRange);
+                    }
+                } catch (e) {
                     document.execCommand('insertHTML', false, html);
                 }
             }
 
-            // Paste Interception on rich canvas
+            // Bulletproof Paste Interception on rich canvas
             canvas.addEventListener('paste', function (e) {
                 e.preventDefault();
                 const clipboardData = e.clipboardData || window.clipboardData;
                 if (!clipboardData) return;
 
                 const pastedHtml = clipboardData.getData('text/html');
-                const pastedText = clipboardData.getData('text/plain');
+                const pastedText = clipboardData.getData('text/plain') || '';
+
+                let htmlToInsert = '';
 
                 if (pastedHtml && pastedHtml.trim()) {
-                    insertCleanHtml(pastedHtml);
-                } else if (pastedText) {
-                    insertCleanPlainText(pastedText);
+                    try {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(pastedHtml, 'text/html');
+
+                        // Remove scripts, styles, metadata
+                        doc.querySelectorAll('style, script, meta, link, title, head, svg, path, iframe, object, embed').forEach(function(el) {
+                            el.remove();
+                        });
+
+                        // Clean attributes
+                        doc.body.querySelectorAll('*').forEach(function(el) {
+                            const href = el.tagName.toLowerCase() === 'a' ? el.getAttribute('href') : null;
+                            el.removeAttribute('style');
+                            el.removeAttribute('class');
+                            el.removeAttribute('id');
+                            if (href) {
+                                el.setAttribute('href', href);
+                                el.setAttribute('target', '_blank');
+                                el.setAttribute('rel', 'noopener noreferrer');
+                            }
+                        });
+
+                        const cleaned = (doc.body.innerHTML || '').trim();
+                        if (cleaned) {
+                            htmlToInsert = cleaned;
+                        }
+                    } catch (err) {
+                        console.warn('HTML Paste Sanitizer fallback:', err);
+                        htmlToInsert = '';
+                    }
+                }
+
+                // Fallback to plain text if HTML was empty or failed
+                if (!htmlToInsert && pastedText) {
+                    const lines = pastedText.split(/\r\n|\r|\n/);
+                    if (lines.length <= 1) {
+                        htmlToInsert = escapeHtml(pastedText);
+                    } else {
+                        htmlToInsert = lines.map(function(line) {
+                            const trimmed = line.trim();
+                            return trimmed ? '<p>' + escapeHtml(line) + '</p>' : '<p><br></p>';
+                        }).join('');
+                    }
+                }
+
+                if (htmlToInsert) {
+                    insertHtmlAtCursor(htmlToInsert);
                 }
 
                 setTimeout(function() {
@@ -577,6 +614,16 @@
                 }
                 canvas.focus();
                 triggerDebouncedSave();
+            });
+
+            // Font size select
+            $('#fontSizeSelect').on('change', function () {
+                const size = $(this).val();
+                if (size) {
+                    document.execCommand('fontSize', false, size);
+                    canvas.focus();
+                    triggerDebouncedSave();
+                }
             });
 
             // Insert Link
