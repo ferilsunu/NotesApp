@@ -6,7 +6,7 @@ const path = require('path')
 const hbs = require('express-handlebars')
 const flash = require('connect-flash')
 const session = require('express-session')
-const {select,GenerateDate} = require('./helpers/hb-helpers.js')
+const hbHelpers = require('./helpers/hb-helpers.js')
 const passport = require('passport')
 require('dotenv').config()
 
@@ -24,9 +24,7 @@ app.use(methodOverride('_method'))
 app.use(express.static(path.join(__dirname,'/public')));
 app.engine('handlebars',hbs({
 defaultLayout:'indexLayout', 
-helpers:{
-    select:select,
-    GenerateDate:GenerateDate}}))
+helpers: hbHelpers}))
 app.set('view engine','handlebars')
 //express-session
 app.use(session({

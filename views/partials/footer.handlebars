@@ -1,97 +1,236 @@
-
-
-
     <!-- Backend Bundle JavaScript -->
     <script src="/js/backend-bundle.min.js"></script>
-    
-    <!-- Flextree Javascript-->
-    <script src="/js/flex-tree.min.js"></script>
-    <script src="/js/tree.js"></script>
-    
-    <!-- Table Treeview JavaScript -->
-    <script src="/js/table-treeview.js"></script>
-    
-    <!-- Masonary Gallery Javascript -->
-    <script src="/js/masonry.pkgd.min.js"></script>
-    <script src="/js/imagesloaded.pkgd.min.js"></script>
-    
-    <!-- Mapbox Javascript -->
-    <script src="/js/mapbox-gl.js"></script>
-    <script src="/js/mapbox.js"></script>
-    
-    <!-- Fullcalender Javascript -->
-    <script src='/css/fullcalendar/core/main.js'></script>
-    <script src='/css/fullcalendar/daygrid/main.js'></script>
-    <script src='/css/fullcalendar/timegrid/main.js'></script>
-    <script src='/css/fullcalendar/list/main.js'></script>
-    
-    <!-- SweetAlert JavaScript -->
-    <script src="/js/sweetalert.js"></script>
-    
-    <!-- Vectoe Map JavaScript -->
-    <script src="/js/vector-map-custom.js"></script>
-    
-    <!-- Chart Custom JavaScript -->
-    <script src="/js/customizer.js"></script>
-    
-    <!-- Chart Custom JavaScript -->
-    <script src="/js/chart-custom.js"></script>
-    
-    <!-- slider JavaScript -->
     <script src="/js/slider.js"></script>
-    
-    <!-- app JavaScript -->
     <script src="/js/app.js"></script>
 
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
 
-    <script src="cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <!-- TinyMCE Rich Editor -->
+    <script src="https://cdn.tiny.cloud/1/qgeigwdvqbpzau6w2q9srsx96iyroxo23etsgt4o1uy2p3ve/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 
     <script>
-        $(document).ready( function () {
+    $(document).ready(function () {
+        // 1. Current Date Banner
+        const dateElem = document.getElementById('current-date-badge');
+        if (dateElem) {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+            dateElem.textContent = now.toLocaleDateString('en-US', options);
+        }
 
+        // 2. DataTables Initialization
+        if ($('#myTable').length) {
+            $('#myTable').DataTable({
+                language: { search: '', searchPlaceholder: "Search table..." },
+                lengthChange: false,
+                pageLength: 8,
+                ordering: false,
+                destroy: true
+            });
+        }
 
+        if ($('#myNotebookTable').length) {
+            $('#myNotebookTable').DataTable({
+                language: { search: '', searchPlaceholder: "Search notebooks..." },
+                lengthChange: false,
+                pageLength: 8,
+                ordering: false,
+                destroy: true
+            });
+        }
 
-    $('#myTable').DataTable({language: {search: '',searchPlaceholder: "Search Notes"},
-    "lengthChange": false, "pageLength": 5,   "ordering": false
-},
-    );
+        // 3. View Switcher (Grid vs Table)
+        const btnGridView = $('#btnGridView');
+        const btnTableView = $('#btnTableView');
+        const gridContainer = $('#notesGridContainer');
+        const tableContainer = $('#notesTableContainer');
 
+        const savedView = localStorage.getItem('notes_view_pref') || 'grid';
+        if (savedView === 'table') {
+            switchToTableView();
+        } else {
+            switchToGridView();
+        }
 
-        $('#myNotebookTable').DataTable({language: {search: '',searchPlaceholder: "Search Notebooks"},
-    "lengthChange": false, "pageLength": 5,   "ordering": false
-},
-    );
+        btnGridView.on('click', function() {
+            switchToGridView();
+            localStorage.setItem('notes_view_pref', 'grid');
+        });
 
+        btnTableView.on('click', function() {
+            switchToTableView();
+            localStorage.setItem('notes_view_pref', 'table');
+        });
 
+        function switchToGridView() {
+            btnGridView.addClass('active');
+            btnTableView.removeClass('active');
+            gridContainer.removeClass('d-none');
+            tableContainer.addClass('d-none');
+        }
 
+        function switchToTableView() {
+            btnTableView.addClass('active');
+            btnGridView.removeClass('active');
+            gridContainer.addClass('d-none');
+            tableContainer.removeClass('d-none');
+        }
 
-} );
+        // 4. Live Search & Notebook Chip Filtering
+        let activeNotebookFilter = 'all';
+        let searchQuery = '';
+
+        const searchInput = $('#noteSearchInput');
+        const clearBtn = $('#clearSearchBtn');
+        const noteCards = $('.note-card-item');
+        const noResultsState = $('#noResultsState');
+        const feedbackElem = $('#notesCountFeedback');
+
+        function applyFilter() {
+            let visibleCount = 0;
+            const q = searchQuery.toLowerCase().trim();
+
+            noteCards.each(function() {
+                const item = $(this);
+                const title = (item.data('title') || '').toString().toLowerCase();
+                const notebook = (item.data('notebook') || '').toString();
+                const content = (item.data('content') || '').toString().toLowerCase();
+
+                const matchesNotebook = (activeNotebookFilter === 'all' || notebook === activeNotebookFilter);
+                const matchesSearch = !q || title.includes(q) || content.includes(q);
+
+                if (matchesNotebook && matchesSearch) {
+                    item.removeClass('d-none');
+                    visibleCount++;
+                } else {
+                    item.addClass('d-none');
+                }
+            });
+
+            if (feedbackElem.length) {
+                feedbackElem.text(visibleCount + (visibleCount === 1 ? ' Note' : ' Notes'));
+            }
+
+            if (visibleCount === 0 && noteCards.length > 0) {
+                noResultsState.removeClass('d-none');
+            } else {
+                noResultsState.addClass('d-none');
+            }
+        }
+
+        if (searchInput.length) {
+            searchInput.on('input', function() {
+                searchQuery = $(this).val();
+                if (searchQuery.length > 0) {
+                    clearBtn.removeClass('d-none');
+                } else {
+                    clearBtn.addClass('d-none');
+                }
+                applyFilter();
+            });
+
+            clearBtn.on('click', function() {
+                searchInput.val('');
+                searchQuery = '';
+                clearBtn.addClass('d-none');
+                applyFilter();
+            });
+
+            $('#resetFilterBtn').on('click', function() {
+                searchInput.val('');
+                searchQuery = '';
+                clearBtn.addClass('d-none');
+                activeNotebookFilter = 'all';
+                $('.filter-chip').removeClass('active');
+                $('.filter-chip[data-notebook="all"]').addClass('active');
+                applyFilter();
+            });
+        }
+
+        $('.filter-chip').on('click', function() {
+            $('.filter-chip').removeClass('active');
+            $(this).addClass('active');
+            activeNotebookFilter = $(this).data('notebook');
+            applyFilter();
+        });
+
+        // 5. Quick View Modal Trigger
+        $(document).on('click', '.quick-view-btn, .quick-view-trigger', function(e) {
+            e.preventDefault();
+            const btn = $(this);
+            const id = btn.data('id');
+            const title = btn.data('title') || 'Untitled Note';
+            const notebook = btn.data('notebook') || 'General';
+            const date = btn.data('date') || '';
+            const noteContent = btn.data('note') || '';
+
+            $('#modalNoteTitle').text(title);
+            $('#modalNotebookPill').text(notebook);
+            $('#modalDateBadge').text(date);
+            $('#modalNoteBody').html(noteContent || '<p class="text-muted italic">No content available.</p>');
+            $('#modalEditLink').attr('href', '/SingleNote/' + id);
+
+            $('#quickViewModal').modal('show');
+        });
+
+        // 6. Copy Modal Note Text
+        $('#modalCopyBtn').on('click', function() {
+            const bodyEl = document.getElementById('modalNoteBody');
+            const textToCopy = bodyEl.innerText || bodyEl.textContent;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const copyBtn = $(this);
+                const originalHtml = copyBtn.html();
+                copyBtn.html('<span>✓ Copied!</span>');
+                setTimeout(() => {
+                    copyBtn.html(originalHtml);
+                }, 1800);
+            });
+        });
+
+        // 7. Edit Notebook AJAX population
+        $('.edit-button').on('click', function () {
+            const id = $(this).val();
+            $.ajax({
+                type: 'POST',
+                url: '/getEditInfo',
+                data: { new_id: id },
+                success: function (data) {
+                    $('.editInput').val(data.name);
+                    $('.editInputId').val(data._id);
+                }
+            });
+        });
+
+        // 8. TinyMCE live word/character counters
+        if ($('#mytextarea').length) {
+            tinymce.init({
+                selector: '#mytextarea',
+                height: 480,
+                plugins: [
+                    'advlist autosave autolink link image lists charmap hr anchor pagebreak',
+                    'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking codesample',
+                    'table emoticons template paste help'
+                ],
+                toolbar: 'undo redo | formatselect | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image table codesample | removeformat fullscreen',
+                menubar: 'file edit view insert format tools table',
+                skin: 'oxide',
+                content_css: 'default',
+                branding: false,
+                statusbar: true,
+                setup: function (editor) {
+                    editor.on('init keyup change paste', function () {
+                        const content = editor.getContent({ format: 'text' });
+                        const words = content.trim() ? content.trim().split(/\s+/).length : 0;
+                        const chars = content.length;
+                        $('#wordCountBadge').text(words + (words === 1 ? ' word' : ' words'));
+                        $('#charCountBadge').text(chars + (chars === 1 ? ' char' : ' chars'));
+                    });
+                }
+            });
+        }
+    });
     </script>
-
-        <script src="https://cdn.tiny.cloud/1/qgeigwdvqbpzau6w2q9srsx96iyroxo23etsgt4o1uy2p3ve/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-
-    
-    <script>
-      tinymce.init({
-        selector: '#mytextarea',
-        plugins: [
-          'advlist autosave autolink link image lists charmap   hr anchor pagebreak',
-          'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking','codesample',
-          'table emoticons template paste help'
-        ],
-        toolbar: 'insertfile undo redo | styleselect | fonts | bold italic underline hr codesample |  strikethrough superscript subscript | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image table |  forecolor backcolor emoticons | searchreplace | restoredraft ',
-        menubar: '',
-        autosave_interval: '20s',
-        branding: false
-
-
-        
-      });
-    </script>
-
     <script src="/js/custom-script.js"></script>
-
-
-
   </body>
 </html>

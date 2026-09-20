@@ -1,60 +1,84 @@
 <div class="content-page">
-    <div class="row">
-        <div class="col-lg-12">                
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        <div>
-                            <h3 class="custom-heading mb-1">Edit Note</h3>
-                            <p class="text-muted mb-0 font-size-14">Update content and organization for this note.</p>
-                        </div>
-                        <a href="/" class="btn btn-secondary d-inline-flex align-items-center">
-                            Back to Notes
+    <div class="container-fluid">
+        <!-- Flash Alerts -->
+        {{#if error}}
+        <div class="alert alert-custom alert-danger d-flex align-items-center mb-4" role="alert">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mr-3 flex-shrink-0"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            <div>{{error}}</div>
+            <button type="button" class="close ml-auto" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {{/if}}
+
+        <form action="/editNote/{{fetched_single_note._id}}?_method=PUT" method="POST" id="noteEditorForm">
+            <!-- Header Action Card -->
+            <div class="editor-header-card mb-4">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                    <div class="d-flex align-items-center">
+                        <a href="/" class="btn-icon-back mr-3" title="Back to Notes">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                         </a>
+                        <div>
+                            <div class="d-flex align-items-center mb-1">
+                                <span class="badge-status-pill">
+                                    <span class="status-dot"></span>
+                                    Editing Note
+                                </span>
+                                <span class="text-muted font-size-12 ml-2">Created {{GenerateDate fetched_single_note.date 'DD MMM YYYY'}}</span>
+                            </div>
+                            <h2 class="hero-title mb-0">{{fetched_single_note.title}}</h2>
+                        </div>
                     </div>
 
-                    <form action="/editNote/{{fetched_single_note._id}}?_method=PUT" method="POST">
-                        <div class="row">
-                            <div class="col-md-8 col-12">
-                                <div class="form-group mb-3">
-                                    <label class="font-weight-700">Note Title</label>
-                                    <input type="text" class="form-control font-weight-600" name="title" placeholder="Note Title" value="{{fetched_single_note.title}}" required autocomplete="off">
-                                </div>
-                            </div>
-
-                            <div class="col-md-4 col-12">
-                                <div class="form-group mb-3">
-                                    <label class="font-weight-700">Notebook</label>
-                                    <div class="select-wrapper">
-                                        <select name="notebook" id="slct" required>
-                                            {{#select fetched_single_note.notebook}}
-                                            {{#each fetched_notebooks}}
-                                            <option value="{{name}}">{{name}}</option>
-                                            {{/each}}
-                                            {{/select}}
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <div class="form-group mb-4">
-                                    <label class="font-weight-700">Content</label>
-                                    <textarea id="mytextarea" class="form-control" name="note" rows="18" placeholder="Type your note content here...">{{fetched_single_note.note}}</textarea>
-                                </div>
-                            </div>
-
-                            <div class="col-12 d-flex align-items-center">
-                                <button type="submit" class="btn btn-primary d-inline-flex align-items-center mr-3">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mr-2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-                                    Save Changes
-                                </button>
-                                <a href="/" class="btn btn-secondary">Cancel</a>
-                            </div>
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <div class="editor-meta-stats d-none d-md-flex align-items-center mr-3">
+                            <span class="meta-stat-pill" id="wordCountBadge">0 words</span>
+                            <span class="meta-stat-pill ml-2" id="charCountBadge">0 chars</span>
                         </div>
-                    </form>
+                        <a href="/" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary d-inline-flex align-items-center shadow-sm">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mr-2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                            <span>Save Changes</span>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
+
+            <!-- Main Editor Card -->
+            <div class="card editor-main-card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-8 col-12 mb-3">
+                            <label class="form-section-label">Note Title</label>
+                            <input type="text" class="form-control editor-title-input" name="title" value="{{fetched_single_note.title}}" placeholder="Note title..." required autocomplete="off">
+                        </div>
+
+                        <div class="col-lg-4 col-12 mb-3">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <label class="form-section-label">Notebook Collection</label>
+                                <a href="/notebooks" class="font-size-12 text-muted hover-underline" target="_blank">+ Manage</a>
+                            </div>
+                            <div class="select-wrapper">
+                                <select name="notebook" id="slct" required>
+                                    {{#select fetched_single_note.notebook}}
+                                        {{#each fetched_notebooks}}
+                                        <option value="{{name}}">{{name}}</option>
+                                        {{/each}}
+                                    {{/select}}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-2">
+                            <label class="form-section-label">Note Content</label>
+                            <div class="editor-textarea-wrapper">
+                                <textarea id="mytextarea" class="form-control" name="note" rows="22">{{fetched_single_note.note}}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>

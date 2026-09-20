@@ -10,16 +10,37 @@ const passport = require('passport')
 module.exports = {
     /*--------- Notes Controller ---------*/
     getIndex: async (req,res)=>{
-        const user_logged = {name: req.user.name}
+        const user_logged = {name: req.user.name, email: req.user.email}
         const user = req.user
-        const fetched_notes = await notesModel.find({user:req.user._id}).lean()
-        res.render('index',{fetched_notes:fetched_notes,user:user,user_logged:user_logged})
+        const fetched_notes = await notesModel.find({user:req.user._id}).sort({date: -1, _id: -1}).lean()
+        const fetched_notebooks = await notebookModel.find({user:req.user._id}).lean()
+        
+        // Count notes per notebook for filter pills
+        const notebooksWithCount = fetched_notebooks.map(nb => {
+            const count = fetched_notes.filter(n => n.notebook === nb.name).length
+            return { ...nb, noteCount: count }
+        })
+
+        res.render('index',{
+            fetched_notes: fetched_notes,
+            fetched_notebooks: notebooksWithCount,
+            totalNotes: fetched_notes.length,
+            totalNotebooks: fetched_notebooks.length,
+            user: user,
+            user_logged: user_logged,
+            activeNav: 'notes'
+        })
     },
     getAddNote: async(req,res)=>{
-        const user_logged = {name: req.user.name}
+        const user_logged = {name: req.user.name, email: req.user.email}
         const user = req.user
         const fetched_notebooks = await notebookModel.find({user:req.user._id}).lean()
-        res.render('add_note',{fetched_notebooks:fetched_notebooks,user:user,user_logged:user_logged})
+        res.render('add_note',{
+            fetched_notebooks: fetched_notebooks,
+            user: user,
+            user_logged: user_logged,
+            activeNav: 'addNote'
+        })
     },
     postAddNote: async (req,res)=>{
         if (!req.body.title || !req.body.note) {
@@ -30,13 +51,14 @@ module.exports = {
             title: req.body.title,
             note: req.body.note,
             notebook: req.body.notebook,
-            user: req.user._id
+            user: req.user._id,
+            date: new Date()
         }).save()
-        req.flash('success_message', 'Note Created')
+        req.flash('success_message', 'Note created successfully')
         res.redirect('/')
     },
     getSingleNotePage: async (req,res)=>{
-        const user_logged = {name: req.user.name}
+        const user_logged = {name: req.user.name, email: req.user.email}
         const user = req.user
         const note_id = req.params.id
         const fetched_single_note = await notesModel.findOne({_id:note_id,user:req.user._id}).lean()
@@ -45,33 +67,60 @@ module.exports = {
             return res.redirect('/')
         }
         const fetched_notebooks = await notebookModel.find({user:req.user._id}).lean()
-        res.render('edit_note',{fetched_single_note:fetched_single_note, fetched_notebooks:fetched_notebooks,user:user,user_logged:user_logged})
+        res.render('edit_note',{
+            fetched_single_note: fetched_single_note,
+            fetched_notebooks: fetched_notebooks,
+            user: user,
+            user_logged: user_logged,
+            activeNav: 'notes'
+        })
     },
     editNote: async (req,res)=>{
         await notesModel.findOneAndUpdate(
             {_id: req.params.id, user: req.user._id},
             {title: req.body.title, note: req.body.note, notebook: req.body.notebook}
         )
+        req.flash('success_message', 'Note updated successfully')
         res.redirect('/')
     },
     deleteNotes: async (req,res)=> {
         const delete_id = req.params.id
         await notesModel.findOneAndDelete({_id:delete_id, user:req.user._id})
+        req.flash('success_message', 'Note deleted successfully')
         res.redirect('/')
     },
     /*--------- End Notes Controller ---------*/
 
     /*--------- Notebooks Controller ---------*/
     getNotebooks: async (req,res)=>{
-        const user_logged = {name: req.user.name}
+        const user_logged = {name: req.user.name, email: req.user.email}
         const user = req.user
-        const fetched_notebooks = await notebookModel.find({user:req.user._id}).lean()
-        res.render('notebooks',{fetched_notebooks:fetched_notebooks,user:user,user_logged:user_logged})
+        const fetched_notebooks = await notebookModel.find({user:req.user._id}).sort({date: -1}).lean()
+        const all_notes = await notesModel.find({user:req.user._id}).lean()
+        
+        // Calculate notes count per notebook
+        const notebooksWithCount = fetched_notebooks.map(nb => {
+            const count = all_notes.filter(n => n.notebook === nb.name).length
+            return { ...nb, noteCount: count }
+        })
+
+        res.render('notebooks',{
+            fetched_notebooks: notebooksWithCount,
+            totalNotebooks: fetched_notebooks.length,
+            totalNotes: all_notes.length,
+            user: user,
+            user_logged: user_logged,
+            activeNav: 'notebooks'
+        })
     },
     postNotebook: async (req,res)=>{
         if (req.body.notebook && req.body.notebook.trim()) {
-            await new notebookModel({name: req.body.notebook.trim(), user: req.user._id}).save()
-            req.flash('success_message', 'Notebook Created')
+            await new notebookModel({
+                name: req.body.notebook.trim(),
+                user: req.user._id,
+                date: new Date()
+            }).save()
+            req.flash('success_message', 'Notebook created successfully')
         }
         res.redirect('/notebooks')
     },
@@ -89,6 +138,7 @@ module.exports = {
                 const oldName = existing.name
                 await notebookModel.findByIdAndUpdate(update_id, {name: newName})
                 await notesModel.updateMany({notebook: oldName, user: req.user._id}, {notebook: newName})
+                req.flash('success_message', 'Notebook updated successfully')
             }
         }
         res.redirect('/notebooks')
@@ -99,6 +149,7 @@ module.exports = {
             if (fetched_notebook) {
                 await notebookModel.findByIdAndDelete(fetched_notebook._id)
                 await notesModel.deleteMany({notebook: fetched_notebook.name, user: req.user._id})
+                req.flash('success_message', 'Notebook deleted successfully')
             }
         } catch (e) {
             console.error('Error deleting notebook:', e)
@@ -107,10 +158,19 @@ module.exports = {
     },
     getNotebooksNotes: async (req,res)=>{
         const user = req.user
-        const user_logged = {name: req.user.name}
-        const fetched_notes = await notesModel.find({notebook: req.params.notebook, user: req.user._id}).lean()
-        const notebook = {name: req.params.notebook}
-        res.render('notebook_notes',{fetched_notes:fetched_notes, notebook:notebook,user:user,user_logged:user_logged})
+        const user_logged = {name: req.user.name, email: req.user.email}
+        const notebookName = req.params.notebook
+        const fetched_notes = await notesModel.find({notebook: notebookName, user: req.user._id}).sort({date: -1, _id: -1}).lean()
+        const fetched_notebooks = await notebookModel.find({user:req.user._id}).lean()
+        const notebook = {name: notebookName, count: fetched_notes.length}
+        res.render('notebook_notes',{
+            fetched_notes: fetched_notes,
+            fetched_notebooks: fetched_notebooks,
+            notebook: notebook,
+            user: user,
+            user_logged: user_logged,
+            activeNav: 'notebooks'
+        })
     },
     /*--------- End Notebooks controller ---------*/
 
