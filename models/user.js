@@ -26,14 +26,23 @@ const user_schema = new mongoose.Schema({
 
      status: {
          type: String,
-         default: 'pending'}
-         
-     
-
+         default: 'pending'
+     },
+     createdAt: {
+         type: Date,
+         default: Date.now
+     }
 })
 
-const user_model = mongoose.model('user',user_schema)
+// Automatically delete unverified (pending) users after 24 hours (86400 seconds)
+user_schema.index(
+    { createdAt: 1 },
+    { 
+        expireAfterSeconds: 86400,
+        partialFilterExpression: { status: 'pending' }
+    }
+)
 
-
+const user_model = mongoose.model('user', user_schema)
 
 module.exports = user_model

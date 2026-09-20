@@ -237,26 +237,32 @@ module.exports = {
         const user = req.body
         const user_Exists = await userModel.findOne({email: user.email})
         if (user_Exists) {
-            req.flash('error', 'User Exists! Please Login')
-            res.redirect('/login')
-        } else {               
-            try {
-                const token = jwt.sign({email: user.email}, process.env.JWT_SECRET, {expiresIn: '480s'})
-                await new userModel({
-                    name: user.name,
-                    password: bcrypt.hashSync(user.password, 8),
-                    email: user.email,
-                    confirmationCode: token 
-                }).save()
-                sendConfirmationEmail(user.name, user.email, token)
-                res.render('confirm_mail', {email: req.body.email})
-            } catch(eror) {
-                if(eror && eror.errors && eror.errors.hasOwnProperty('email')){
-                    const message = eror.errors.email.message
-                    req.flash('custom_error', message)
-                }           
-                res.redirect('/register')
+            if (user_Exists.status === 'pending') {
+                // Remove unverified pending user record to allow fresh signup
+                await userModel.deleteOne({ _id: user_Exists._id })
+            } else {
+                req.flash('error', 'User Exists! Please Login')
+                return res.redirect('/login')
             }
+        }
+        
+        try {
+            const token = jwt.sign({email: user.email}, process.env.JWT_SECRET, {expiresIn: '480s'})
+            await new userModel({
+                name: user.name,
+                password: bcrypt.hashSync(user.password, 8),
+                email: user.email,
+                confirmationCode: token,
+                createdAt: new Date()
+            }).save()
+            sendConfirmationEmail(user.name, user.email, token)
+            res.render('confirm_mail', {email: req.body.email})
+        } catch(eror) {
+            if(eror && eror.errors && eror.errors.hasOwnProperty('email')){
+                const message = eror.errors.email.message
+                req.flash('custom_error', message)
+            }           
+            res.redirect('/register')
         }
     },
     confirmMail: async (req,res)=>{
@@ -269,7 +275,7 @@ module.exports = {
                     button_link: '/register',
                     button_message: 'Register'
                 }
-                await userModel.findOneAndRemove({confirmationCode: token})
+                await userModel.deleteOne({confirmationCode: token})
                 res.render('mail-confirmed', {message: message})
             } else {
                 const confirm_message = {
