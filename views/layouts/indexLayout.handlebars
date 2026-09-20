@@ -1,33 +1,16 @@
 {{>header}}
 
-    <!-- loader Start -->
-    <div id="loading">
-          <div id="loading-center">
-          </div>
+<div class="app-layout">
+    {{#if user}}
+        {{>nav}}
+    {{/if}}
+    <div class="app-main-content">
+        {{{body}}}
+        {{#if user}}
+            {{>footer-panel}}
+        {{/if}}
     </div>
-
-  
-
-    <!-- Wrapper Start -->
-    <div class="wrapper">
-      
- <!-- Side Navigation -->
-{{#if user}}
-{{>nav}}
-            {{/if}}
-<!-- content -->
-{{{body}}}
-<!-- footer -->
-
-{{#if user}}
-
-{{>footer-panel}}
-
-{{/if}}
-<!-- content -->
-
-
-
+</div>
 
 {{>footer}}
 
