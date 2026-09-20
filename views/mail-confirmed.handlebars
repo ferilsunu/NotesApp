@@ -1,19 +1,15 @@
-<section class="login-content">
-    <div class="container h-100">
-        <div class="row justify-content-center align-items-center height-self-center">
-            <div class="col-lg-5 col-md-7 col-sm-10 col-12 text-center">
-                <div class="sign-user_card text-center">
-                    <div class="app-brand-badge mx-auto mb-3" style="width: 48px; height: 48px;">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                        </svg>
-                    </div> 
-                    <h3 class="mb-2 font-weight-800">{{message.title}}</h3>
-                    <p class="text-muted mb-4 font-size-14">{{message.message}}</p>
-                    <a href="{{message.button_link}}" class="btn btn-primary btn-block">{{message.button_message}}</a>
-                </div>
-            </div>
+<section class="auth-section">
+    <div class="auth-container">
+        <div class="auth-card text-center">
+            <div class="auth-brand-badge mx-auto mb-3">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+            </div> 
+            <h2 class="auth-heading mb-2">{{message.title}}</h2>
+            <p class="auth-subheading mb-4">{{message.message}}</p>
+            <a href="{{message.button_link}}" class="btn btn-primary btn-block auth-submit-btn">{{message.button_message}}</a>
         </div>
     </div>
 </section>

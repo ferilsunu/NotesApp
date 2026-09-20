@@ -7,7 +7,6 @@
                     <polyline points="14 2 14 8 20 8"></polyline>
                     <line x1="16" y1="13" x2="8" y2="13"></line>
                     <line x1="16" y1="17" x2="8" y2="17"></line>
-                    <polyline points="10 9 9 9 8 9"></polyline>
                 </svg>
             </div>
             <div class="brand-text-wrap ml-2">
@@ -20,86 +19,97 @@
         </div>
     </div>    
 
-    <div class="sidebar-caption dropdown">
-        <a href="#" class="iq-user-toggle d-flex align-items-center justify-content-between" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <div class="user-avatar-circle">
-                <span>{{initials user_logged.name}}</span>
+    <!-- User Profile Box -->
+    <div class="sidebar-user-section dropdown mb-4">
+        <a href="#" class="user-profile-trigger d-flex align-items-center justify-content-between" id="userMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div class="d-flex align-items-center">
+                <div class="user-avatar-badge">
+                    <span>{{initials user_logged.name}}</span>
+                </div>
+                <div class="user-text-details ml-2">
+                    <div class="user-profile-name">{{user_logged.name}}</div>
+                    <div class="user-profile-status">
+                        <span class="online-indicator"></span>
+                        <span>Active</span>
+                    </div>
+                </div>
             </div>
-            <div class="caption flex-grow-1 ml-2 text-left">
-                <h6 class="mb-0 user-name-display">{{user_logged.name}}</h6>
-                <span class="user-role-badge">Online Workspace</span>
-            </div>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-muted"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </a>
-        <div class="dropdown-menu w-100 border-0 my-2 shadow-sm" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item d-flex align-items-center" href="/logout">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        <div class="dropdown-menu w-100 border-0 my-2 shadow-lg" aria-labelledby="userMenuButton">
+            <div class="px-3 py-2 border-bottom">
+                <div class="font-size-12 font-weight-600 text-dark">{{user_logged.name}}</div>
+                <div class="font-size-11 text-muted text-truncate">{{user_logged.email}}</div>
+            </div>
+            <a class="dropdown-item d-flex align-items-center py-2 mt-1 text-danger" href="/logout">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                 <span>Sign Out</span>
             </a>
         </div>
     </div>
 
-    <div class="data-scrollbar" data-scroll="1">
-        <div class="sidebar-btn mb-3">
-            <a href="/addNote" class="btn btn-primary btn-block d-flex align-items-center justify-content-center">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mr-2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                <span>Add New Note</span>
-            </a>
-        </div>
-
-        <div class="menu-container">
-            <nav class="iq-sidebar-menu">
-                <ul id="iq-sidebar-toggle" class="iq-menu">
-                    <li class="{{#if (eq activeNav 'notes')}}active{{/if}}">
-                        <a href="/" class="svg-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                <polyline points="14 2 14 8 20 8"></polyline>
-                                <line x1="16" y1="13" x2="8" y2="13"></line>
-                                <line x1="16" y1="17" x2="8" y2="17"></line>
-                            </svg>
-                            <span>All Notes</span>
-                        </a>
-                    </li>
-                    <li class="{{#if (eq activeNav 'notebooks')}}active{{/if}}">
-                        <a href="/notebooks" class="collapsed svg-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                            </svg>
-                            <span>Notebooks</span>
-                        </a>
-                    </li>
-                    <li class="{{#if (eq activeNav 'addNote')}}active{{/if}}">
-                        <a href="/addNote" class="collapsed svg-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-                                <line x1="12" y1="5" x2="12" y2="19"></line>
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                            </svg>
-                            <span>Create Note</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-divider my-2"></li>
-                    <li>
-                        <a href="https://github.com/ferilsunu/NotesApp" target="_blank" rel="noopener" class="collapsed svg-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="mr-2">
-                                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-                            </svg>
-                            <span>GitHub Code</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://ferilsunu.com" target="_blank" rel="noopener" class="collapsed svg-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="2" y1="12" x2="22" y2="12"></line>
-                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                            </svg>
-                            <span>Portfolio</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+    <!-- Quick Add Button -->
+    <div class="sidebar-action-wrap mb-4">
+        <a href="/addNote" class="btn btn-primary btn-block d-flex align-items-center justify-content-center py-2 font-weight-600">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mr-2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>Add New Note</span>
+        </a>
     </div>
-</div>
+
+    <div class="sidebar-nav-container">
+        <div class="nav-section-title">Navigation</div>
+        <ul class="clean-sidebar-menu">
+            <li class="{{#if (eq activeNav 'notes')}}active{{/if}}">
+                <a href="/">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                    </svg>
+                    <span>All Notes</span>
+                </a>
+            </li>
+            <li class="{{#if (eq activeNav 'notebooks')}}active{{/if}}">
+                <a href="/notebooks">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    <span>Notebooks</span>
+                </a>
+            </li>
+            <li class="{{#if (eq activeNav 'addNote')}}active{{/if}}">
+                <a href="/addNote">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>Create Note</span>
+                </a>
+            </li>
+
+            <li class="menu-divider my-3"></li>
+            <div class="nav-section-title">Links</div>
+
+            <li>
+                <a href="https://github.com/ferilsunu/NotesApp" target="_blank" rel="noopener">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="mr-3">
+                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                    </svg>
+                    <span>GitHub Code</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://ferilsunu.com" target="_blank" rel="noopener">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                    </svg>
+                    <span>Portfolio</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>     
